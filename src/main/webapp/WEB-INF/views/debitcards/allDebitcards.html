@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+</head>
+<body>
+
+<div th:each="debitcard : ${debitcards}">
+    <p th:text="${debitcard.getCardNumber() + ' - ' + debitcard.getIssueCardDate()+ ' - ' +debitcard.getCardExpirationDate()+
+    ' - ' + debitcard.getCvvCode()   + ' - ' +debitcard.getCardBalance()+ ' - ' +debitcard.getPassportNumber()}">user</p>
+    <br/>
+</div>
+
+<br/>
+
+
+</body>
+</html>

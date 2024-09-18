@@ -1,6 +1,6 @@
 package onlinebank.models;
 
-public enum mortgageTerm {
+public enum MortgageTerm {
 
     TENYEARS {},
     FIFTEENYEARS {},

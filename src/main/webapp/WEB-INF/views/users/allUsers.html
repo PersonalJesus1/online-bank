@@ -6,9 +6,10 @@
 </head>
 <body>
 
+
 <div th:each="user : ${users}">
-    <p th:text="${user.getName() + ' ' + user.getSurname()+ ', ' +user.getSex()+ ' ' + user.getPassportNumber()
-    + ' ' +user.getMortgageList()+ ' ' +user.getAutoLoanList()}">user</p>
+    <p th:text="${user.name + ' ' + user.surname+ ', ' + user.sex+ ' ' + user.passportNumber
+    + ' ' + user.mortgageList + ' ' + user.autoLoanList}">user</p>
     <br/>
 </div>
 

@@ -3,10 +3,10 @@ package onlinebank.models;
 public class Mortgage {
     private double mortgageSum;
     private double currentMortgageSum;
-    private mortgageTerm mortgageTerm;
+    private MortgageTerm mortgageTerm;
     private int passportNumber;
 
-    public Mortgage(double mortgageSum, double currentMortgageSum, onlinebank.models.mortgageTerm mortgageTerm, int passportNumber) {
+    public Mortgage(double mortgageSum, double currentMortgageSum, MortgageTerm mortgageTerm, int passportNumber) {
         this.mortgageSum = mortgageSum;
         this.currentMortgageSum = currentMortgageSum;
         this.mortgageTerm = mortgageTerm;
@@ -29,11 +29,11 @@ public class Mortgage {
         this.currentMortgageSum = currentMortgageSumm;
     }
 
-    public onlinebank.models.mortgageTerm getMortgageTerm() {
+    public MortgageTerm getMortgageTerm() {
         return mortgageTerm;
     }
 
-    public void setMortgageTerm(onlinebank.models.mortgageTerm mortgageTerm) {
+    public void setMortgageTerm(MortgageTerm mortgageTerm) {
         this.mortgageTerm = mortgageTerm;
     }
 

@@ -1,25 +1,27 @@
 package onlinebank.dao;
 
 import onlinebank.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserDAO {
-    private List<User> users;
 
-    {
-        users = new ArrayList<>();
-        users.add(new User("Tom", "Baker", LocalDate.of(1996, 8, 22), Sex.M, 5895256, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
-        users.add(new User("Bob", "Taylor", LocalDate.of(1991, 5, 13), Sex.M, 5425270, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
-        users.add(new User("Mike", "Smith", LocalDate.of(1989, 2, 18), Sex.M, 1225381, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
-        users.add(new User("Katy", "Butcher", LocalDate.of(1990, 11, 7), Sex.F, 8629943, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    public UserDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<User> getAllUsers() {
-        return users;
+        return namedParameterJdbcTemplate.query("SELECT * FROM bankuser", new BeanPropertyRowMapper<>(User.class));
+
     }
+
 }

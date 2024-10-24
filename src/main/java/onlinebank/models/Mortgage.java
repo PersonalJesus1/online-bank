@@ -1,39 +1,43 @@
 package onlinebank.models;
 
 public class Mortgage {
-    private double mortgageSum;
-    private double currentMortgageSum;
-    private mortgageTerm mortgageTerm;
+    private double mortgageSumm;
+    private double currentMortgageSumm;
+    private MortgageTerm mortgageTerm;
     private int passportNumber;
 
-    public Mortgage(double mortgageSum, double currentMortgageSum, onlinebank.models.mortgageTerm mortgageTerm, int passportNumber) {
-        this.mortgageSum = mortgageSum;
-        this.currentMortgageSum = currentMortgageSum;
+    public Mortgage(double mortgageSumm, double currentMortgageSumm, MortgageTerm mortgageTerm, int passportNumber) {
+        this.mortgageSumm = mortgageSumm;
+        this.currentMortgageSumm = currentMortgageSumm;
         this.mortgageTerm = mortgageTerm;
         this.passportNumber = passportNumber;
     }
 
+    public Mortgage() {
+
+    }
+
     public double getMortgageSumm() {
-        return mortgageSum;
+        return mortgageSumm;
     }
 
     public void setMortgageSumm(double mortgageSumm) {
-        this.mortgageSum = mortgageSumm;
+        this.mortgageSumm = mortgageSumm;
     }
 
     public double getCurrentMortgageSumm() {
-        return currentMortgageSum;
+        return currentMortgageSumm;
     }
 
     public void setCurrentMortgageSumm(double currentMortgageSumm) {
-        this.currentMortgageSum = currentMortgageSumm;
+        this.currentMortgageSumm = currentMortgageSumm;
     }
 
-    public onlinebank.models.mortgageTerm getMortgageTerm() {
+    public MortgageTerm getMortgageTerm() {
         return mortgageTerm;
     }
 
-    public void setMortgageTerm(onlinebank.models.mortgageTerm mortgageTerm) {
+    public void setMortgageTerm(MortgageTerm mortgageTerm) {
         this.mortgageTerm = mortgageTerm;
     }
 
@@ -45,4 +49,3 @@ public class Mortgage {
         this.passportNumber = passportNumber;
     }
 }
-

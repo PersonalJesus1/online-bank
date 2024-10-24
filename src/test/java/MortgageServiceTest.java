@@ -2,7 +2,7 @@ package onlinebank.services;
 
 import onlinebank.dao.MortgageDAO;
 import onlinebank.models.Mortgage;
-import onlinebank.models.mortgageTerm;
+import onlinebank.models.MortgageTerm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,10 +32,10 @@ public class MortgageServiceTest {
     void testIndex() {
         // Arrange
         List<Mortgage> expectedMortgages = Arrays.asList(
-                new Mortgage(250000, 250000, mortgageTerm.FIFTEENYEARS, 5895256),
-                new Mortgage(280000, 280000, mortgageTerm.FIFTEENYEARS, 8532954),
-                new Mortgage(230000, 230000, mortgageTerm.TENYEARS, 7581599),
-                new Mortgage(300000, 300000, mortgageTerm.TWENTYYEARS, 8523965)
+                new Mortgage(250000, 250000, MortgageTerm.FIFTEENYEARS, 5895256),
+                new Mortgage(280000, 280000, MortgageTerm.FIFTEENYEARS, 8532954),
+                new Mortgage(230000, 230000, MortgageTerm.TENYEARS, 7581599),
+                new Mortgage(300000, 300000, MortgageTerm.TWENTYYEARS, 8523965)
         );
 
         when(mortgageDAO.getAllMortgages()).thenReturn(expectedMortgages);

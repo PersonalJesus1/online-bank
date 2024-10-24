@@ -6,14 +6,19 @@
 </head>
 <body>
 
-<div th:each="autoloan : ${autoloans}">
-    <p th:text="${autoloan.getMortgageSumm() + ' - ' + autoloan.getCurrentMortgageSumm()+ ' - ' +autoloan.getMortgageMonthsTerm()+
-    ' - ' + autoloan.getPassportNumber() }">user</p>
+<div th:each="autoloan : ${autoloan}">
+    <p th:text="${ autoloan.getMortgageSumm() + ' - '    + autoloan.getCurrentMortgageSumm()+ ' - '
+    +autoloan.getMortgageMonthsTerm()+ ' - ' + autoloan.getPassportNumber() }">autoloans</p>
     <br/>
 </div>
+<br>
+<a href="/autoloans/new">Create a new autoloan</a>
 
-<br/>
+<br>
+<a href="/online-bank">To get back to the main page of website</a>
+<br>
 <hr/>
 
 </body>
 </html>
+

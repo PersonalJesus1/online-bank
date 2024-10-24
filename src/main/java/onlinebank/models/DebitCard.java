@@ -1,3 +1,4 @@
+
 package onlinebank.models;
 
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ public class DebitCard {
         this.cvvCode = cvvCode;
         this.cardBalance = cardBalance;
         this.passportNumber = passportNumber;
+    }
+    public DebitCard() {
     }
 
     public String getCardNumber() {

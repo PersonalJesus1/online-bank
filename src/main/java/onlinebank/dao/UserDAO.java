@@ -1,25 +1,49 @@
 package onlinebank.dao;
 
+import onlinebank.Extractors.UserExtractor;
 import onlinebank.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserDAO {
-    private List<User> users;
 
-    {
-        users = new ArrayList<>();
-        users.add(new User("Tom", "Baker", LocalDate.of(1996, 8, 22), Sex.M, 5895256, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
-        users.add(new User("Bob", "Taylor", LocalDate.of(1991, 5, 13), Sex.M, 5425270, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
-        users.add(new User("Mike", "Smith", LocalDate.of(1989, 2, 18), Sex.M, 1225381, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
-        users.add(new User("Katy", "Butcher", LocalDate.of(1990, 11, 7), Sex.F, 8629943, new ArrayList<Mortgage>(), new ArrayList<AutoLoan>()));
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public UserDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<User> getAllUsers() {
-        return users;
+        String sql = "SELECT * FROM bankuser";
+        return jdbcTemplate.query(sql, new UserExtractor());
+    }
+
+
+    public User show(int passportNumber) {
+        return jdbcTemplate.query("SELECT * FROM bankuser WHERE passportNumber=?", new Object[]{passportNumber}, new UserExtractor())
+                .stream().findAny().orElse(null);
+    }
+    public void save(User user) {
+        jdbcTemplate.update("INSERT INTO bankuser VALUES(?, ?, ?, ?, ?)",
+                user.getName(),
+                user.getSurname(),
+                java.sql.Date.valueOf(user.getDateOfBirth()),
+                user.getSex(),
+                user.getPassportNumber());
+    }
+
+    public void update(int passportNumber, User updatedUser) {
+        jdbcTemplate.update("UPDATE bankuser SET name=?, surname=?, dateofbirth=?,  sex=? WHERE passportnumber=?", updatedUser.getName(),
+                updatedUser.getSurname(), updatedUser.getDateOfBirth(),  updatedUser.getSex(), passportNumber);
+    }
+
+    public void delete(int passportNumber) {
+        jdbcTemplate.update("DELETE FROM bankuser WHERE passportNumber=?", passportNumber);
     }
 }

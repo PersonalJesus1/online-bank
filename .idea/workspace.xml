@@ -10,44 +10,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30d649d0-8468-484e-b10a-c33e66814165" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/online_bank_war_exploded.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/config/SpringConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/config/mvcDispatcherServletInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/AutoLoansController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/DebitCardsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/MortgagesController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/UsersController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/AutoLoanDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/DebitCardDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/MortgageDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/UserDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/AutoLoan.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/DebitCard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/Mortgage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/Sex.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/mortgageTerm.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/AutoLoanService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/DebitCardService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/MortgageService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/autoloans/allAutoloans.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/debitcards/allDebitcards.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/mortgages/allMortgages.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users/allUsers.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/AutoLoanServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/DebitCardServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/MortgageServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/onlinebank/Extractors/MortgageExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/online_bank_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/online_bank_war_exploded.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/config/SpringConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/config/SpringConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/config/mvcDispatcherServletInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/config/MvcDispatcherServletInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/AutoLoansController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/AutoLoansController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/DebitCardsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/DebitCardsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/MortgagesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/MortgagesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/UsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/controllers/UsersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/dao/AutoLoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/AutoLoanDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/dao/DebitCardDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/DebitCardDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/dao/MortgageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/MortgageDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/dao/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/dao/UserDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/models/AutoLoan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/AutoLoan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/models/DebitCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/DebitCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/models/Mortgage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/Mortgage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/models/Sex.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/models/mortgageTerm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/models/MortgageTerm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/services/AutoLoanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/AutoLoanService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/services/DebitCardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/DebitCardService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/services/MortgageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/MortgageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/onlinebank/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/onlinebank/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/autoloans/allAutoloans.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/autoloans/allAutoloans.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/debitcards/allDebitcards.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/debitcards/allDebitcards.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/mortgages/allMortgages.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/mortgages/allMortgages.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users/allUsers.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users/allUsers.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/MortgageServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/MortgageServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/UserServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UserServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +64,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PersonalJesus1&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PersonalJesus1/online-bank&quot;,
+    &quot;accountId&quot;: &quot;939fc280-44c2-4ac7-bd29-048d618c9f9c&quot;
+  }
+}</component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
     <option name="FILTER_WARNINGS" value="false" />
@@ -74,6 +83,9 @@
     <option name="FILTER_DEBUG" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2l0ih32yH5RMCBhhhErqOPTsnCs" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -83,17 +95,22 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
+    "Maven.online-bank [clean,install].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Tomcat Server.Tomcat 10.1.28.executor": "Run",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/My files/Programs/Java/My Projects/Lessons/online-bank/online-bank/src/main/webapp/WEB-INF/views/mortgages",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
+    "project.structure.side.proportion": "0.19282137",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -290,11 +307,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="JUnit.AutoLoanServiceTest.testIndex" />
+      <item itemvalue="Tomcat Server.Tomcat 10.1.28" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.AutoLoanServiceTest.testIndex" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -327,6 +356,9 @@
       <workItem from="1724640772308" duration="7415000" />
       <workItem from="1724747258570" duration="10345000" />
       <workItem from="1724832415392" duration="2928000" />
+      <workItem from="1729730215185" duration="507000" />
+      <workItem from="1729772802133" duration="1889000" />
+      <workItem from="1729775363150" duration="6053000" />
     </task>
     <servers />
   </component>

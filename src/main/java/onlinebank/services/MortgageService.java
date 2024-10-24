@@ -1,22 +1,27 @@
 package onlinebank.services;
 
 import onlinebank.dao.MortgageDAO;
+import onlinebank.models.DebitCard;
 import onlinebank.models.Mortgage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
-@Component
+@Service
 public class MortgageService {
-    @Autowired
     private final MortgageDAO mortgageDAO;
 
-    @Autowired
     public MortgageService(MortgageDAO mortgageDAO) {
         this.mortgageDAO = mortgageDAO;
     }
 
     public List<Mortgage> getAllMortgages() {
         return mortgageDAO.getAllMortgages();
+    }
+
+    public void save(Mortgage mortgage) {
+        mortgageDAO.save(mortgage);
+
     }
 }

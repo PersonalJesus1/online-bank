@@ -1,25 +1,47 @@
 package onlinebank.dao;
 
+import onlinebank.Extractors.AutoloanExtractor;
 import onlinebank.models.AutoLoan;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class AutoLoanDAO {
-    private List<AutoLoan> autoLoans;
 
-    {
-        autoLoans = new ArrayList<>();
-        autoLoans.add(new AutoLoan(85000, 85000, 12, 2585944));
-        autoLoans.add(new AutoLoan(120000, 120000, 15, 4185257));
-        autoLoans.add(new AutoLoan(100000, 100000, 13, 8591258));
-        autoLoans.add(new AutoLoan(115000, 115000, 14, 8529524));
+    private JdbcTemplate jdbcTemplate;
+
+    public AutoLoanDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<AutoLoan> getAllAutoloans() {
-        return autoLoans;
+        return jdbcTemplate.query("select * from autoloan", new AutoloanExtractor());
+    }
+
+    public void save(AutoLoan autoLoan) {
+        // Сначала добавляем новую запись в таблицу autoloan
+        jdbcTemplate.update("INSERT INTO autoloan (mortgagesumm, currentmortgagesumm, mortgagemonthsterm, passportnumber) VALUES (?, ?, ?, ?)",
+                autoLoan.getMortgageSumm(),
+                autoLoan.getCurrentMortgageSumm(),
+                autoLoan.getMortgageMonthsTerm(),
+                autoLoan.getPassportNumber());
+
+        // Затем обновляем autoloanlist в таблице bankuser
+        String updateBankUserSql = "UPDATE bankuser " +
+                "SET autoloanlist = COALESCE(autoloanlist, '[]'::jsonb) || " +
+                "jsonb_build_array(jsonb_build_object(" +
+                "'mortgagesumm', ?, " +
+                "'currentmortgagesumm', ?, " +
+                "'mortgagemonthsterm', ?)) " +
+                "WHERE passportnumber = ?";
+
+        jdbcTemplate.update(updateBankUserSql,
+                autoLoan.getMortgageSumm(),
+                autoLoan.getCurrentMortgageSumm(),
+                autoLoan.getMortgageMonthsTerm(),
+                autoLoan.getPassportNumber());
     }
 
 }

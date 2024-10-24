@@ -1,4 +1,6 @@
+
 package onlinebank.models;
+
 
 public class AutoLoan {
     private double mortgageSumm;
@@ -11,6 +13,10 @@ public class AutoLoan {
         this.currentMortgageSumm = currentMortgageSumm;
         this.mortgageMonthsTerm = mortgageMonthsTerm;
         this.passportNumber = passportNumber;
+    }
+
+    public AutoLoan() {
+
     }
 
     public double getMortgageSumm() {
@@ -45,3 +51,4 @@ public class AutoLoan {
         this.passportNumber = passportNumber;
     }
 }
+

@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserDAO userDAO;
-
     @Autowired
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;

@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New account</title>
+</head>
+<body>
+
+<form method="POST" th:action="@{/users}" th:object="${user}">
+  <!-- Name Field -->
+  <label for="name">Enter name: </label>
+  <input type="text" th:field="*{name}" id="name" />
+  <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+  <br/>
+
+  <!-- Surname Field -->
+  <label for="surname">Enter surname: </label>
+  <input type="text" th:field="*{surname}" id="surname" />
+  <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Surname Error</div>
+  <br/>
+
+  <!-- Passport Number Field -->
+  <label for="passportNumber">Enter passportNumber: </label>
+  <input type="number" th:field="*{passportNumber}" id="passportNumber" required />
+  <div style="color:red" th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}">Passport Number Error</div>
+  <br/>
+
+  <!-- Date of Birth Field -->
+  <label for="dateOfBirth">Enter date of birth: </label>
+  <input type="date" th:field="*{dateOfBirth}" id="dateOfBirth" />
+  <div style="color:red" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Date of Birth Error</div>
+  <br/>
+
+  <!-- Sex Field -->
+  <label for="sex">Select sex: </label>
+  <select th:field="*{sex}" id="sex">
+    <option value="M">Male</option>
+    <option value="F">Female</option>
+  </select>
+  <div style="color:red" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</div>
+  <br/>
+
+  <input type="submit" value="Create!" />
+</form>
+
+</body>
+</html>

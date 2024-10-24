@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update account</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/users/{passportNumber}/edit(passportNumber=${user.getPassportNumber()})}" th:object="${user}">
+    <!-- Поля формы для редактирования пользователя -->
+    <label for="name">Enter name: </label>
+    <input type="text" th:field="*{name}" id="name" />
+    <br/>
+
+    <!-- Surname Field -->
+    <label for="surname">Enter surname: </label>
+    <input type="text" th:field="*{surname}" id="surname" />
+    <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Surname Error</div>
+    <br/>
+
+    <!-- Date of Birth Field -->
+    <label for="dateOfBirth">Enter date of birth: </label>
+    <input type="date" th:field="*{dateOfBirth}" id="dateOfBirth" />
+    <div style="color:red" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Date of Birth Error</div>
+    <br/>
+
+    <!-- Sex Field -->
+    <label for="sex">Select sex: </label>
+    <select th:field="*{sex}" id="sex">
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+    </select>
+    <div style="color:red" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</div>
+    <br/>
+
+    <input type="submit" value="Update!"/>
+
+</form>
+
+</body>
+</html>
+

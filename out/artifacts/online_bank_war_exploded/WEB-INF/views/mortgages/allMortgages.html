@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All mortgages</title>
+</head>
+<body>
+
+<div th:each="mortgage : ${mortgages}">
+    <p th:text="${mortgage.getMortgageSumm() + ' - ' + mortgage.getCurrentMortgageSumm()+ ' - ' +
+    mortgage.getMortgageTerm().name()+
+    ' - ' + mortgage.getPassportNumber() }">mortgage</p>
+    <br/>
+</div>
+
+<br>
+<a href="/mortgages/new">Create a new mortgage</a>
+
+<br/>
+<a href="/online-bank">To get back to the main page of website</a>
+<br>
+
+</body>
+</html>

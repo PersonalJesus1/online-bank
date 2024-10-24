@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New mortgage</title>
+  <script>
+    function updateCurrentMortgageSumm() {
+      // Получаем значение mortgageSumm
+      var mortgageSummValue = document.getElementById("mortgageSumm").value;
+
+      // Устанавливаем это значение в поле CurrentMortgageSumm
+      document.getElementById("currentMortgageSumm").value = mortgageSummValue;
+    }
+  </script>
+</head>
+<body>
+
+<form method="POST" th:action="@{/mortgages}" th:object="${mortgage}">
+
+  <!-- mortgageSumm Field -->
+  <label for="mortgageSumm">Enter mortgageSumm: </label>
+  <input type="number" th:field="*{mortgageSumm}" id="mortgageSumm" oninput="updateCurrentMortgageSumm()" required />
+  <div style="color:red" th:if="${#fields.hasErrors('mortgageSumm')}" th:errors="*{mortgageSumm}">mortgageSumm Error</div>
+  <br/>
+
+  <!-- CurrentMortgageSumm Field -->
+  <label for="currentMortgageSumm">Enter currentMortgageSumm: </label>
+  <input type="number" th:field="*{currentMortgageSumm}" id="currentMortgageSumm" required />
+  <br/>
+
+  <!-- mortgageTerm Field -->
+  <label for="mortgageTerm">Select mortgageTerm: </label>
+  <select th:field="*{mortgageTerm}" id="mortgageTerm">
+    <option value='TENYEARS'>TENYEARS</option>
+    <option value="FIFTEENYEARS">FIFTEENYEARS</option>
+    <option value="TWENTYYEARS">TWENTYYEARS</option>
+  </select>
+  <div style="color:red" th:if="${#fields.hasErrors('mortgageTerm')}" th:errors="*{mortgageTerm}">mortgageTerm Error</div>
+  <br/>
+
+  <!-- Passport Number Field -->
+  <label for="passportNumber">Enter passportNumber: </label>
+  <input type="number" th:field="*{passportNumber}" id="passportNumber" required />
+  <div style="color:red" th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}">Passport Number Error</div>
+  <br/>
+
+  <input type="submit" value="Create!" />
+</form>
+
+</body>
+</html>
+

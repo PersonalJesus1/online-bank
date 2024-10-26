@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update autoloan</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/autoloans/{passportNumber}/edit(passportNumber=${autoloan.getPassportNumber()})}" th:object="${autoloan}">
+    <!-- Поля формы для редактирования пользователя -->
+    <label for="mortgageSumm">Enter mortgageSumm: </label>
+    <input type="number" th:field="*{mortgageSumm}" id="mortgageSumm" />
+    <br/>
+
+    <!-- Surname Field -->
+    <label for="currentMortgageSumm">Enter currentMortgageSumm: </label>
+    <input type="text" th:field="*{currentMortgageSumm}" id="currentMortgageSumm" />
+    <div style="color:red" th:if="${#fields.hasErrors('currentMortgageSumm')}" th:errors="*{currentMortgageSumm}">currentMortgageSumm Error</div>
+    <br/>
+
+    <!-- Date of Birth Field -->
+    <label for="mortgageMonthsTerm">Enter mortgageMonthsTerm: </label>
+    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm" />
+    <div style="color:red" th:if="${#fields.hasErrors('mortgageMonthsTerm')}" th:errors="*{mortgageMonthsTerm}">mortgageMonthsTerm Error</div>
+    <br/>
+
+
+    <input type="submit" value="Update!"/>
+
+</form>
+
+</body>
+</html>
+

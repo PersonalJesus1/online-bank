@@ -3,6 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>New debitcard</title>
+  <script>
+    function updateExpirationDate() {
+      const issueCardDateInput = document.getElementById("issueCardDate");
+      const cardExpirationDateInput = document.getElementById("cardExpirationDate");
+
+      // Получаем введенную дату
+      const issueCardDateValue = issueCardDateInput.value;
+
+      if (issueCardDateValue) {
+        // Преобразуем строку в объект Date
+        const issueDate = new Date(issueCardDateValue);
+
+        // Добавляем 3 года
+        issueDate.setFullYear(issueDate.getFullYear() + 3);
+
+        // Преобразуем дату обратно в строку в формате YYYY-MM-DD
+        const expirationDate = issueDate.toISOString().split('T')[0];
+
+        // Устанавливаем рассчитанную дату в поле cardExpirationDate
+        cardExpirationDateInput.value = expirationDate;
+      }
+    }
+  </script>
 </head>
 <body>
 
@@ -15,7 +38,7 @@
 
   <!-- issuecarddate Field -->
   <label for="issueCardDate">Enter issuecarddate: </label>
-  <input type="date" th:field="*{issueCardDate}" id="issueCardDate" />
+  <input type="date" th:field="*{issueCardDate}" id="issueCardDate" oninput="updateExpirationDate()" />
   <div style="color:red" th:if="${#fields.hasErrors('issueCardDate')}" th:errors="*{issueCardDate}">issueCardDate Error</div>
   <br/>
 

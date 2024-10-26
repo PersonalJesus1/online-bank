@@ -1,6 +1,7 @@
 package onlinebank.dao;
 
 import onlinebank.Extractors.DebitcardExtractor;
+import onlinebank.Extractors.UserExtractor;
 import onlinebank.models.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -29,4 +30,19 @@ public class DebitCardDAO {
                 debitCard.getCardBalance(),
                 debitCard.getPassportNumber());
     }
+    public DebitCard show(String cardNumber) {
+        return jdbcTemplate.query("SELECT * FROM debitcard WHERE cardNumber=?", new Object[]{cardNumber}, new DebitcardExtractor())
+                .stream().findAny().orElse(null);
+    }
+    public void update(String cardNumber, DebitCard  updatedDebitCard) {
+        jdbcTemplate.update("UPDATE debitcard SET issuecarddate=?, cardexpirationdate=?,  " +
+                        "cvvcode=?,cardbalance=?  WHERE cardNumber=?",
+                updatedDebitCard.getIssueCardDate(), updatedDebitCard.getCardExpirationDate(),  updatedDebitCard.getCvvCode(),
+                updatedDebitCard.getCardBalance(),cardNumber);
+    }
+
+    public void delete(String cardNumber) {
+        jdbcTemplate.update("DELETE FROM debitcard WHERE cardNumber=?", cardNumber);
+    }
+
 }

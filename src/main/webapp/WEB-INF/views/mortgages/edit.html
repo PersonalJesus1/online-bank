@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update mortgage</title>
+    <script>
+        function updateCurrentMortgageSumm() {
+            // Получаем значение mortgageSumm
+            var mortgageSummValue = document.getElementById("mortgageSumm").value;
+
+            // Устанавливаем это значение в поле CurrentMortgageSumm
+            document.getElementById("currentMortgageSumm").value = mortgageSummValue;
+        }
+    </script>
+</head>
+<body>
+<form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/edit(passportNumber=${mortgage.passportNumber}, mortgageSumm=${mortgage.mortgageSumm})}" method="post" th:object="${mortgage}">
+    <input type="hidden" name="_method" value="patch"/>
+
+    <!-- mortgageSumm Field -->
+    <label for="mortgageSumm">Enter mortgageSumm: </label>
+    <input type="number" th:field="*{mortgageSumm}" id="mortgageSumm" oninput="updateCurrentMortgageSumm()" required />
+    <div style="color:red" th:if="${#fields.hasErrors('mortgageSumm')}" th:errors="*{mortgageSumm}">mortgageSumm Error</div>
+    <br/>
+
+    <!-- CurrentMortgageSumm Field -->
+    <label for="currentMortgageSumm">Enter currentMortgageSumm: </label>
+    <input type="number" th:field="*{currentMortgageSumm}" id="currentMortgageSumm" required />
+    <br/>
+
+    <label for="mortgageTerm">Select mortgageTerm: </label>
+    <select th:field="*{mortgageTerm}" id="mortgageTerm">
+        <option value='TENYEARS'>TENYEARS</option>
+        <option value="FIFTEENYEARS">FIFTEENYEARS</option>
+        <option value="TWENTYYEARS">TWENTYYEARS</option>
+    </select>
+    <br/>
+
+    <input type="submit" value="Update!"/>
+</form>
+
+
+</body>
+</html>
+

@@ -1,8 +1,10 @@
 package onlinebank.services;
 
+import onlinebank.Extractors.MortgageExtractor;
 import onlinebank.dao.MortgageDAO;
 import onlinebank.models.DebitCard;
 import onlinebank.models.Mortgage;
+import onlinebank.models.MortgageTerm;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,18 @@ public class MortgageService {
     public void save(Mortgage mortgage) {
         mortgageDAO.save(mortgage);
 
+    }
+
+    public void update(int passportNumber, double mortgageSumm, Mortgage updatedMortgage){
+        mortgageDAO.update(passportNumber, mortgageSumm, updatedMortgage);
+    }
+
+    public Mortgage show(int passportNumber, double mortgageSumm) {
+        return mortgageDAO.show(passportNumber, mortgageSumm);
+    }
+
+
+    public void delete(int passportNumber, double mortgageSumm) {
+        mortgageDAO.delete(passportNumber, mortgageSumm);
     }
 }

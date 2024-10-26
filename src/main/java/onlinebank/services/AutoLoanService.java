@@ -3,6 +3,7 @@ package onlinebank.services;
 
 import onlinebank.dao.AutoLoanDAO;
 import onlinebank.models.AutoLoan;
+import onlinebank.models.DebitCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,16 @@ public class AutoLoanService {
     public void save(AutoLoan autoLoan) {
         autoLoanDAO.save(autoLoan);
 
+    }
+    public void update(int passportNumber, AutoLoan updatedAutoloan) {
+        autoLoanDAO.update( passportNumber, updatedAutoloan);
+    }
+
+    public AutoLoan show(int passportNumber) {
+        return autoLoanDAO.show(passportNumber);
+    }
+
+    public void delete(int passportNumber) {
+        autoLoanDAO.delete(passportNumber);
     }
 }

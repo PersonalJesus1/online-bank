@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Delete</title>
+</head>
+<body>
+<h2>Are you sure you want to delete this autoloan with passport number: <span th:text="${autoloan.passportNumber}"></span>?</h2>
+
+<!-- Форма для подтверждения удаления пользователя -->
+<form th:method="DELETE" th:action="@{/autoloans/{passportNumber}(passportNumber=${autoloan.getPassportNumber()})}">
+    <input type="submit" value="Delete"/>
+</form>
+
+<a href="/autoloans">Cancel</a>
+</body>
+</html>

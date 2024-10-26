@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Delete</title>
+</head>
+<body>
+<h2>Are you sure you want to delete this mortgage with mortgageSumm: <span th:text="${mortgage.mortgageSumm}"></span>,
+    passportNumber: <span th:text="${mortgage.passportNumber}"></span>?</h2>
+
+<td>
+    <form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/delete
+    (passportNumber=${mortgage.passportNumber}, mortgageSumm=${mortgage.mortgageSumm})}" method="post">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this mortgage?');"/>
+    </form>
+</td>
+
+<a href="/debitcards">Cancel</a>
+</body>
+</html>

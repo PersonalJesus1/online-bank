@@ -7,55 +7,42 @@
         function updateExpirationDate() {
             const issueCardDateInput = document.getElementById("issueCardDate");
             const cardExpirationDateInput = document.getElementById("cardExpirationDate");
-
-            // Получаем введенную дату
+            // Get date from input
             const issueCardDateValue = issueCardDateInput.value;
-
             if (issueCardDateValue) {
-                // Преобразуем строку в объект Date
+                // From String to Date
                 const issueDate = new Date(issueCardDateValue);
-
-                // Добавляем 3 года
+                // plus 3 years
                 issueDate.setFullYear(issueDate.getFullYear() + 3);
-
-                // Преобразуем дату обратно в строку в формате YYYY-MM-DD
+                // to String with format YYYY-MM-DD
                 const expirationDate = issueDate.toISOString().split('T')[0];
-
-                // Устанавливаем рассчитанную дату в поле cardExpirationDate
+                // Set currect date into field cardExpirationDate
                 cardExpirationDateInput.value = expirationDate;
             }
         }
     </script>
 </head>
 <body>
-
 <form th:method="PATCH" th:action="@{/debitcards/{cardNumber}/edit(cardNumber=${debitcard.getCardNumber()})}" th:object="${debitcard}">
-
-    <!-- issueCardDate -->
+    <!-- issueCardDate Field -->
     <label for="issueCardDate">Enter issueCardDate: </label>
     <input type="date" th:field="*{issueCardDate}" id="issueCardDate" oninput="updateExpirationDate()" />
     <div style="color:red" th:if="${#fields.hasErrors('issueCardDate')}" th:errors="*{issueCardDate}">issueCardDate Error</div>
     <br/>
-
-    <!-- cardExpirationDate -->
+    <!-- cardExpirationDate Field -->
     <label for="cardExpirationDate">Enter cardExpirationDate: </label>
     <input type="date" th:field="*{cardExpirationDate}" id="cardExpirationDate" />
     <div style="color:red" th:if="${#fields.hasErrors('cardExpirationDate')}" th:errors="*{cardExpirationDate}">cardExpirationDate Error</div>
     <br/>
-
-    <!-- Поля формы для редактирования пользователя -->
+    <!-- cvvCode Field -->
     <label for="cvvCode">Enter cvvCode: </label>
     <input type="number" th:field="*{cvvCode}" id="cvvCode" />
     <br/>
-
-    <!-- Поля формы для редактирования пользователя -->
+    <!-- cardBalance Field -->
     <label for="cardBalance">Enter cardBalance: </label>
     <input type="number" th:field="*{cardBalance}" id="cardBalance" />
     <br/>
-
     <input type="submit" value="Update!"/>
-
 </form>
-
 </body>
 </html>

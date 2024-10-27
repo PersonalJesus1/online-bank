@@ -1,4 +1,3 @@
-
 import onlinebank.dao.AutoLoanDAO;
 import onlinebank.models.AutoLoan;
 import onlinebank.services.AutoLoanService;
@@ -12,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AutoLoanServiceTest {
 
@@ -28,7 +27,7 @@ public class AutoLoanServiceTest {
     }
 
     @Test
-    void testIndex() {
+    void testGetAllAutoloans() {
         // Arrange
         List<AutoLoan> expectedLoans = Arrays.asList(
                 new AutoLoan(85000, 85000, 12, 2585944),
@@ -44,5 +43,60 @@ public class AutoLoanServiceTest {
 
         // Assert
         assertEquals(expectedLoans, actualLoans, "The list of auto loans should match the expected list.");
+    }
+
+    @Test
+    void testSaveAutoLoan() {
+        // Arrange
+        AutoLoan newAutoLoan = new AutoLoan(90000, 90000, 12, 1234567);
+
+        // Act
+        autoLoanService.save(newAutoLoan);
+
+        // Assert
+        verify(autoLoanDAO, times(1)).save(newAutoLoan);
+    }
+
+    @Test
+    void testUpdateAutoLoan() {
+        // Arrange
+        int passportNumber = 1234567;
+        double mortgageSumm = 90000;
+        AutoLoan updatedAutoLoan = new AutoLoan(95000, 95000, 15, passportNumber);
+
+        // Act
+        autoLoanService.update(passportNumber, mortgageSumm, updatedAutoLoan);
+
+        // Assert
+        verify(autoLoanDAO, times(1)).update(passportNumber, mortgageSumm, updatedAutoLoan);
+    }
+
+    @Test
+    void testShowAutoLoan() {
+        // Arrange
+        int passportNumber = 1234567;
+        double mortgageSumm = 90000;
+        AutoLoan expectedAutoLoan = new AutoLoan(mortgageSumm, 90000, 12, passportNumber);
+
+        when(autoLoanDAO.show(passportNumber, mortgageSumm)).thenReturn(expectedAutoLoan);
+
+        // Act
+        AutoLoan actualAutoLoan = autoLoanService.show(passportNumber, mortgageSumm);
+
+        // Assert
+        assertEquals(expectedAutoLoan, actualAutoLoan, "The auto loan returned should match the expected loan.");
+    }
+
+    @Test
+    void testDeleteAutoLoan() {
+        // Arrange
+        int passportNumber = 1234567;
+        double mortgageSumm = 90000;
+
+        // Act
+        autoLoanService.delete(passportNumber, mortgageSumm);
+
+        // Assert
+        verify(autoLoanDAO, times(1)).delete(passportNumber, mortgageSumm);
     }
 }

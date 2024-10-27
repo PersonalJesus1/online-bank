@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Delete</title>
+</head>
+<body>
+<h2>Are you sure you want to delete user with passport number: <span th:text="${user.passportNumber}"></span>?</h2>
+<form th:method="DELETE" th:action="@{/users/{passportNumber}(passportNumber=${user.getPassportNumber()})}">
+    <input type="submit" value="Delete"/>
+</form>
+<a href="/users">Cancel</a>
+</body>
+</html>

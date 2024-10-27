@@ -1,6 +1,8 @@
 package onlinebank.controllers;
 
 import jakarta.validation.Valid;
+import onlinebank.models.AutoLoan;
+import onlinebank.models.Mortgage;
 import onlinebank.models.User;
 import onlinebank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,14 @@ public class UsersController {
     @GetMapping
     public String getAllUsers(Model model) {
         List<User> users = userService.getAllUsers();
+        users.forEach(user -> {
+            user.setMortgageList(userService.showMortgages(user.getPassportNumber()));
+            user.setAutoLoanList(userService.showAutoLoans(user.getPassportNumber()));
+        });
         model.addAttribute("users", users);
         return "users/allUsers";
     }
+
 
     @GetMapping("/new")
     public String newUser(Model model) {
@@ -56,15 +63,14 @@ public class UsersController {
         return "redirect:/users";
     }
 
-    // Контроллер для подтверждения удаления
     @GetMapping("/confirm-delete")
     public String confirmDelete(@RequestParam("passportNumber") int passportNumber, Model model) {
-        User user = userService.show(passportNumber);  // Получаем пользователя по номеру паспорта
+        User user = userService.show(passportNumber);
         if (user == null) {
-            return "users/not-found";  // Если пользователь не найден
+            return "users/not-found";
         }
         model.addAttribute("user", user);
-        return "users/confirm-delete";  // Возвращает страницу подтверждения удаления
+        return "users/confirm-delete";
     }
 
     @DeleteMapping("/{passportNumber}/delete")

@@ -5,10 +5,9 @@
     <title>Update mortgage</title>
     <script>
         function updateCurrentMortgageSumm() {
-            // Получаем значение mortgageSumm
+            // Get value of mortgageSumm
             var mortgageSummValue = document.getElementById("mortgageSumm").value;
-
-            // Устанавливаем это значение в поле CurrentMortgageSumm
+            // Set this value into CurrentMortgageSumm
             document.getElementById("currentMortgageSumm").value = mortgageSummValue;
         }
     </script>
@@ -16,18 +15,16 @@
 <body>
 <form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/edit(passportNumber=${mortgage.passportNumber}, mortgageSumm=${mortgage.mortgageSumm})}" method="post" th:object="${mortgage}">
     <input type="hidden" name="_method" value="patch"/>
-
     <!-- mortgageSumm Field -->
     <label for="mortgageSumm">Enter mortgageSumm: </label>
     <input type="number" th:field="*{mortgageSumm}" id="mortgageSumm" oninput="updateCurrentMortgageSumm()" required />
     <div style="color:red" th:if="${#fields.hasErrors('mortgageSumm')}" th:errors="*{mortgageSumm}">mortgageSumm Error</div>
     <br/>
-
     <!-- CurrentMortgageSumm Field -->
     <label for="currentMortgageSumm">Enter currentMortgageSumm: </label>
     <input type="number" th:field="*{currentMortgageSumm}" id="currentMortgageSumm" required />
     <br/>
-
+    <!-- mortgageTerm Field -->
     <label for="mortgageTerm">Select mortgageTerm: </label>
     <select th:field="*{mortgageTerm}" id="mortgageTerm">
         <option value='TENYEARS'>TENYEARS</option>
@@ -35,11 +32,7 @@
         <option value="TWENTYYEARS">TWENTYYEARS</option>
     </select>
     <br/>
-
     <input type="submit" value="Update!"/>
 </form>
-
-
 </body>
 </html>
-

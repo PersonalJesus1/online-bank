@@ -5,20 +5,53 @@
     <title>All autoloans</title>
 </head>
 <body>
-
-<div th:each="autoloan : ${autoloan}">
-    <p th:text="${ autoloan.getMortgageSumm() + ' - '    + autoloan.getCurrentMortgageSumm()+ ' - '
-    +autoloan.getMortgageMonthsTerm()+ ' - ' + autoloan.getPassportNumber() }">autoloans</p>
-    <br/>
-</div>
+<h2>List of autoloans</h2>
+<!-- Table with the list of autoloans -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>MortgageSumm</th>
+        <th>CurrentMortgageSumm</th>
+        <th>mortgageMonthsTerm</th>
+        <th>PassportNumber</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop for show all of autoloans -->
+    <tr th:each="autoloan : ${autoloans}">
+        <td th:text="${autoloan.mortgageSumm}"></td>
+        <td th:text="${autoloan.currentMortgageSumm}"></td>
+        <td th:text="${autoloan.mortgageMonthsTerm}"></td>
+        <td th:text="${autoloan.passportNumber}"></td>
+        <!-- Button to edit -->
+        <td>
+            <form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/edit(
+                             passportNumber=${autoloan.passportNumber},
+                             mortgageSumm=${autoloan.mortgageSumm})}"
+                  method="get">
+                <input type="submit" value="Edit"/>
+            </form>
+        </td>
+        <!-- Button to delete -->
+        <td>
+            <form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/delete(passportNumber=${autoloan.passportNumber},
+            mortgageSumm=${autoloan.mortgageSumm})}" method="post">
+                <input type="hidden" name="_method" value="delete"/>
+                <input type="submit" value="Delete"
+                       onclick="return confirm('Are you sure you want to delete this autoloan?');"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 <br>
+<!-- Button to create a new autoloan -->
 <a href="/autoloans/new">Create a new autoloan</a>
-
-<br>
+<br/>
+<!-- Button to get back to the main page -->
 <a href="/online-bank">To get back to the main page of website</a>
 <br>
-<hr/>
-
 </body>
 </html>
-

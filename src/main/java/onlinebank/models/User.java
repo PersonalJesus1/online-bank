@@ -1,9 +1,7 @@
 package onlinebank.models;
 
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class User {
@@ -15,7 +13,6 @@ public class User {
 
     private ArrayList<Mortgage> mortgageList;
     private ArrayList<AutoLoan> autoLoanList;
-
 
     public User() {
     }
@@ -53,7 +50,6 @@ public class User {
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-
 
     public String getSex() {
         return sex;

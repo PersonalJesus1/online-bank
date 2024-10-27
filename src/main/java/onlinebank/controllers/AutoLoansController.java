@@ -2,7 +2,6 @@ package onlinebank.controllers;
 
 import jakarta.validation.Valid;
 import onlinebank.models.AutoLoan;
-import onlinebank.models.DebitCard;
 import onlinebank.services.AutoLoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +21,10 @@ public class AutoLoansController {
 
     @GetMapping()
     public String getAllAutoloans(Model model) {
-        model.addAttribute("autoloan", autoLoanService.getAllAutoloans());
+        model.addAttribute("autoloans", autoLoanService.getAllAutoloans());
         return "autoloans/allAutoloans";
     }
+
     @GetMapping("/new")
     public String newAutoloan(Model model) {
         model.addAttribute("autoloan", new AutoLoan());
@@ -40,33 +40,40 @@ public class AutoLoansController {
         return "redirect:/autoloans";
     }
 
-    @GetMapping("/{passportNumber}/edit")
-    public String edit(Model model, @PathVariable("passportNumber") int passportNumber) {
-        model.addAttribute("autoloan", autoLoanService.show(passportNumber));
+    @GetMapping("/{passportNumber}/{mortgageSumm}/edit")
+    public String edit(Model model,
+                       @PathVariable("passportNumber") int passportNumber,
+                       @PathVariable("mortgageSumm") double mortgageSumm) {
+        model.addAttribute("autoloan", autoLoanService.show(passportNumber, mortgageSumm));
         return "autoloans/edit";
     }
 
-    @PatchMapping("/{passportNumber}/edit")
-    public String updateUserupdateUser(@ModelAttribute("autoloan") @Valid AutoLoan autoloan, BindingResult bindingResult,
-                                       @PathVariable("passportNumber") int passportNumber) {
-        autoLoanService.update(passportNumber, autoloan);
+    @PatchMapping("/{passportNumber}/{mortgageSumm}/edit")
+    public String updateMortgage(@ModelAttribute("autoloan") @Valid AutoLoan autoloan, BindingResult bindingResult,
+                                 @PathVariable("passportNumber") int passportNumber,
+                                 @PathVariable("mortgageSumm") double mortgageSumm) {
+        if (bindingResult.hasErrors()) {
+            return "autoloans/edit";
+        }
+        autoLoanService.update(passportNumber, mortgageSumm, autoloan);
         return "redirect:/autoloans";
     }
 
-    // Контроллер для подтверждения удаления
     @GetMapping("/confirm-delete")
-    public String confirmDelete(@RequestParam("passportNumber") int passportNumber, Model model) {
-        AutoLoan autoloan = autoLoanService.show(passportNumber);  // Получаем пользователя по номеру паспорта
+    public String confirmDelete(@RequestParam("passportNumber") int passportNumber,
+                                @RequestParam("mortgageSumm") double mortgageSumm,  Model model) {
+        AutoLoan autoloan = autoLoanService.show(passportNumber, mortgageSumm);
         if (autoloan == null) {
-            return "autoloans/not-found";  // Если пользователь не найден
+            return "autoloans/not-found";
         }
         model.addAttribute("autoloan", autoloan);
-        return "autoloans/confirm-delete";  // Возвращает страницу подтверждения удаления
+        return "autoloans/confirm-delete";
     }
 
-    @DeleteMapping("/{passportNumber}/delete")
-    public String delete(@PathVariable("passportNumber") int passportNumber) {
-        autoLoanService.delete(passportNumber);
+    @DeleteMapping("/{passportNumber}/{mortgageSumm}/delete")
+    public String delete(@PathVariable("passportNumber") int passportNumber,
+                         @PathVariable("mortgageSumm") double mortgageSumm) {
+        autoLoanService.delete(passportNumber, mortgageSumm);
         return "redirect:/autoloans";
     }
 }

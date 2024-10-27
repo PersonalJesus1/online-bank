@@ -5,10 +5,8 @@
     <title>All debitcards</title>
 </head>
 <body>
-
 <h2>List of debitcards</h2>
-
-<!-- Таблица со списком пользователей -->
+<!-- Table with the list of debitcards -->
 <table border="1">
     <thead>
     <tr>
@@ -23,7 +21,7 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Цикл для отображения всех пользователей -->
+    <!-- Loop for show all of debitcards -->
     <tr th:each="debitcard : ${debitcards}">
         <td th:text="${debitcard.cardNumber}"></td>
         <td th:text="${debitcard.issueCardDate}"></td>
@@ -31,33 +29,28 @@
         <td th:text="${debitcard.cvvCode}"></td>
         <td th:text="${debitcard.cardBalance}"></td>
         <td th:text="${debitcard.passportNumber}"></td>
-
-        <!-- Кнопка для редактирования -->
+        <!-- Button to edit -->
         <td>
             <form th:action="@{/debitcards/{cardNumber}/edit(cardNumber=${debitcard.cardNumber})}" method="get">
                 <input type="submit" value="Edit"/>
             </form>
         </td>
-
-        <!-- Кнопка для удаления -->
+        <!-- Button to delete -->
         <td>
             <form th:action="@{/debitcards/{cardNumber}/delete(cardNumber=${debitcard.cardNumber})}" method="post">
-                <input type="hidden" name="_method" value="delete" />
-                <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this debitcard?');"/>
+                <input type="hidden" name="_method" value="delete"/>
+                <input type="submit" value="Delete"
+                       onclick="return confirm('Are you sure you want to delete this debitcard?');"/>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-
 <br/>
-
-<!-- Кнопка для создания нового пользователя -->
+<!-- Button to create a new debitcard -->
 <a href="/debitcards/new">Create a new debitcard</a>
-
-<br><br>
-
+<br>
+<!-- Button to get back to the main page -->
 <a href="/online-bank">Back to main page</a>
-
 </body>
 </html>

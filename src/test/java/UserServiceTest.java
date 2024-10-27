@@ -1,4 +1,3 @@
-
 import onlinebank.dao.UserDAO;
 import onlinebank.models.User;
 import onlinebank.services.UserService;
@@ -7,43 +6,68 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
-/*
+class UserServiceTest {
+
     @Mock
     private UserDAO userDAO;
 
     @InjectMocks
     private UserService userService;
 
+    private User user;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        user = new User("John", "Doe", LocalDate.of(1985, 5, 15), "M", 123456, null, null);
     }
 
     @Test
-    void testIndex() {
-        // Arrange
-        List<User> expectedUsers = Arrays.asList(
-                new User("Tom", "Baker", LocalDate.of(1996, 8, 22), Sex.M, 5895256, new ArrayList<>(), new ArrayList<>()),
-                new User("Bob", "Taylor", LocalDate.of(1991, 5, 13), Sex.M, 5425270, new ArrayList<>(), new ArrayList<>()),
-                new User("Mike", "Smith", LocalDate.of(1989, 2, 18), Sex.M, 1225381, new ArrayList<>(), new ArrayList<>()),
-                new User("Katy", "Butcher", LocalDate.of(1990, 11, 7), Sex.F, 8629943, new ArrayList<>(), new ArrayList<>())
-        );
+    void getAllUsersTest() {
+        List<User> users = Arrays.asList(user);
+        when(userDAO.getAllUsers()).thenReturn(users);
 
-        when(userDAO.getAllUsers()).thenReturn(expectedUsers);
+        List<User> result = userService.getAllUsers();
 
-        // Act
-        List<User> actualUsers = userService.getAllUsers();
+        assertEquals(1, result.size());
+        assertEquals("John", result.get(0).getName());
+        verify(userDAO, times(1)).getAllUsers();
+    }
 
-        // Assert
-        assertEquals(expectedUsers, actualUsers, "The list of users should match the expected list.");
-    }*/
+    @Test
+    void saveUserTest() {
+        userService.save(user);
+        verify(userDAO, times(1)).save(user);
+    }
+
+    @Test
+    void updateUserTest() {
+        userService.update(123456, user);
+        verify(userDAO, times(1)).update(123456, user);
+    }
+
+    @Test
+    void showUserTest() {
+        when(userDAO.show(123456)).thenReturn(user);
+
+        User result = userService.show(123456);
+
+        assertNotNull(result);
+        assertEquals("John", result.getName());
+        verify(userDAO, times(1)).show(123456);
+    }
+
+    @Test
+    void deleteUserTest() {
+        userService.delete(123456);
+        verify(userDAO, times(1)).delete(123456);
+    }
 }

@@ -2,7 +2,6 @@ package onlinebank.controllers;
 
 import jakarta.validation.Valid;
 import onlinebank.models.DebitCard;
-import onlinebank.models.User;
 import onlinebank.services.DebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +24,7 @@ public class DebitCardsController {
         model.addAttribute("debitcards", debitCardService.getAllDebitcards());
         return "debitcards/allDebitcards";
     }
+
     @GetMapping("/new")
     public String newDebitcard(Model model) {
         model.addAttribute("debitcard", new DebitCard());
@@ -53,15 +53,14 @@ public class DebitCardsController {
         return "redirect:/debitcards";
     }
 
-    // Контроллер для подтверждения удаления
     @GetMapping("/confirm-delete")
     public String confirmDelete(@RequestParam("cardNumber") String cardNumber, Model model) {
-        DebitCard debitcard = debitCardService.show(cardNumber);  // Получаем пользователя по номеру паспорта
+        DebitCard debitcard = debitCardService.show(cardNumber);
         if (debitcard == null) {
-            return "debitcards/not-found";  // Если пользователь не найден
+            return "debitcards/not-found";
         }
         model.addAttribute("debitcard", debitcard);
-        return "debitcards/confirm-delete";  // Возвращает страницу подтверждения удаления
+        return "debitcards/confirm-delete";
     }
 
     @DeleteMapping("/{cardNumber}/delete")

@@ -5,10 +5,8 @@
     <title>All mortgages</title>
 </head>
 <body>
-
 <h2>List of mortgages</h2>
-
-<!-- Таблица со списком пользователей -->
+<!-- Table with the list of mortgages -->
 <table border="1">
     <thead>
     <tr>
@@ -21,14 +19,13 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Цикл для отображения всех пользователей -->
+    <!-- Loop for show all of mortgages -->
     <tr th:each="mortgage : ${mortgages}">
         <td th:text="${mortgage.mortgageSumm}"></td>
         <td th:text="${mortgage.currentMortgageSumm}"></td>
         <td th:text="${mortgage.mortgageTerm}"></td>
         <td th:text="${mortgage.passportNumber}"></td>
-
-        <!-- Кнопка для редактирования -->
+        <!-- Button to edit -->
         <td>
             <form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/edit(
                              passportNumber=${mortgage.passportNumber},
@@ -37,25 +34,24 @@
                 <input type="submit" value="Edit"/>
             </form>
         </td>
-
-        <!-- Кнопка для удаления -->
+        <!-- Button to delete -->
         <td>
-            <form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/delete(passportNumber=${mortgage.passportNumber}, mortgageSumm=${mortgage.mortgageSumm})}" method="post">
-                <input type="hidden" name="_method" value="delete" />
-                <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this mortgage?');"/>
+            <form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/delete(passportNumber=${mortgage.passportNumber}, mortgageSumm=${mortgage.mortgageSumm})}"
+                  method="post">
+                <input type="hidden" name="_method" value="delete"/>
+                <input type="submit" value="Delete"
+                       onclick="return confirm('Are you sure you want to delete this mortgage?');"/>
             </form>
-
         </td>
     </tr>
     </tbody>
 </table>
-
 <br>
+<!-- Button to create a new mortgage -->
 <a href="/mortgages/new">Create a new mortgage</a>
-
 <br/>
+<!-- Button to get back to the main page -->
 <a href="/online-bank">To get back to the main page of website</a>
 <br>
-
 </body>
 </html>

@@ -1,6 +1,5 @@
 package onlinebank.dao;
 
-import onlinebank.Extractors.DebitcardExtractor;
 import onlinebank.Extractors.MortgageExtractor;
 import onlinebank.models.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,19 +17,19 @@ public class MortgageDAO {
 
     public List<Mortgage> getAllMortgages() {
         return jdbcTemplate.query("select * from mortgage", new MortgageExtractor());
-
     }
+
     public void save(Mortgage mortgage) {
-        // Добавляем запись в таблицу mortgage
+        // Insert a new account into table mortgage
         jdbcTemplate.update(
                 "INSERT INTO mortgage (mortgagesumm, currentmortgagesumm, mortgageterm, passportnumber) VALUES (?, ?, ?::mortgagetermenum, ?)",
                 mortgage.getMortgageSumm(),
                 mortgage.getCurrentMortgageSumm(),
-                mortgage.getMortgageTerm().name(),  // Преобразуем enum в строку
+                mortgage.getMortgageTerm().name(),
                 mortgage.getPassportNumber()
         );
 
-        // Обновляем mortgagelist в таблице bankuser
+        // Update mortgagelist in table bankuser
         String updateBankUserSql = "UPDATE bankuser " +
                 "SET mortgagelist = COALESCE(mortgagelist, '[]'::jsonb) || " +
                 "jsonb_build_array(jsonb_build_object(" +
@@ -42,11 +41,10 @@ public class MortgageDAO {
         jdbcTemplate.update(updateBankUserSql,
                 mortgage.getMortgageSumm(),
                 mortgage.getCurrentMortgageSumm(),
-                mortgage.getMortgageTerm().name(),  // Преобразуем enum в строку
+                mortgage.getMortgageTerm().name(),
                 mortgage.getPassportNumber()
         );
     }
-
 
     public Mortgage show(int passportNumber, double mortgageSumm) {
         return jdbcTemplate.query("SELECT * FROM mortgage WHERE passportNumber=? AND mortgageSumm=?",
@@ -59,15 +57,13 @@ public class MortgageDAO {
                         "WHERE passportnumber = ? AND mortgagesumm = ?",
                 updatedMortgage.getMortgageSumm(),
                 updatedMortgage.getCurrentMortgageSumm(),
-                updatedMortgage.getMortgageTerm().name(), // Преобразуем Enum в строку
+                updatedMortgage.getMortgageTerm().name(),
                 passportNumber,
                 mortgageSumm);
     }
 
-
-    public void delete(int passportNumber, double mortgageSumm ) {
+    public void delete(int passportNumber, double mortgageSumm) {
         jdbcTemplate.update("DELETE FROM mortgage WHERE passportNumber=? AND mortgageSumm=?",
                 passportNumber, mortgageSumm);
     }
-
 }

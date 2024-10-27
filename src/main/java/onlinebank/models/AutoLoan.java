@@ -1,6 +1,4 @@
-
 package onlinebank.models;
-
 
 public class AutoLoan {
     private double mortgageSumm;
@@ -51,4 +49,3 @@ public class AutoLoan {
         this.passportNumber = passportNumber;
     }
 }
-

@@ -1,7 +1,6 @@
 package onlinebank.controllers;
 
 import jakarta.validation.Valid;
-import onlinebank.models.DebitCard;
 import onlinebank.models.Mortgage;
 import onlinebank.services.MortgageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,6 @@ public class MortgagesController {
         return "mortgages/edit";
     }
 
-
     @PatchMapping("/{passportNumber}/{mortgageSumm}/edit")
     public String updateMortgage(@ModelAttribute("mortgage") @Valid Mortgage mortgage, BindingResult bindingResult,
                                  @PathVariable("passportNumber") int passportNumber,
@@ -58,16 +56,13 @@ public class MortgagesController {
         if (bindingResult.hasErrors()) {
             return "mortgages/edit";
         }
-
-        // Передаем и mortgageTerm как параметр для обновления
         mortgageService.update(passportNumber, mortgageSumm, mortgage);
         return "redirect:/mortgages";
     }
 
-
     @GetMapping("/confirm-delete")
     public String confirmDelete(@RequestParam("passportNumber") int passportNumber,
-                                @RequestParam("mortgageSumm") double mortgageSumm,  Model model) {
+                                @RequestParam("mortgageSumm") double mortgageSumm, Model model) {
         Mortgage mortgage = mortgageService.show(passportNumber, mortgageSumm);
         if (mortgage == null) {
             return "mortgages/not-found";

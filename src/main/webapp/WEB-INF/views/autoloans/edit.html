@@ -3,32 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Update autoloan</title>
+    <script>
+        function updateCurrentMortgageSumm() {
+            // Get value of mortgageSumm
+            var mortgageSummValue = document.getElementById("mortgageSumm").value;
+            // Set this value into CurrentMortgageSumm
+            document.getElementById("currentMortgageSumm").value = mortgageSummValue;
+        }
+    </script>
 </head>
 <body>
-
-<form th:method="PATCH" th:action="@{/autoloans/{passportNumber}/edit(passportNumber=${autoloan.getPassportNumber()})}" th:object="${autoloan}">
-    <!-- Поля формы для редактирования пользователя -->
+<form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/edit(passportNumber=${autoloan.passportNumber},
+mortgageSumm=${autoloan.mortgageSumm})}" method="post" th:object="${autoloan}">
+    <input type="hidden" name="_method" value="patch"/>
+    <!-- mortgageSumm Field -->
     <label for="mortgageSumm">Enter mortgageSumm: </label>
-    <input type="number" th:field="*{mortgageSumm}" id="mortgageSumm" />
+    <input type="number" th:field="*{mortgageSumm}" id="mortgageSumm" oninput="updateCurrentMortgageSumm()" required />
+    <div style="color:red" th:if="${#fields.hasErrors('mortgageSumm')}" th:errors="*{mortgageSumm}">mortgageSumm Error</div>
     <br/>
-
-    <!-- Surname Field -->
+    <!-- CurrentMortgageSumm Field -->
     <label for="currentMortgageSumm">Enter currentMortgageSumm: </label>
-    <input type="text" th:field="*{currentMortgageSumm}" id="currentMortgageSumm" />
-    <div style="color:red" th:if="${#fields.hasErrors('currentMortgageSumm')}" th:errors="*{currentMortgageSumm}">currentMortgageSumm Error</div>
+    <input type="number" th:field="*{currentMortgageSumm}" id="currentMortgageSumm" required />
     <br/>
-
-    <!-- Date of Birth Field -->
+    <!-- mortgageMonthsTerm Field -->
     <label for="mortgageMonthsTerm">Enter mortgageMonthsTerm: </label>
-    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm" />
-    <div style="color:red" th:if="${#fields.hasErrors('mortgageMonthsTerm')}" th:errors="*{mortgageMonthsTerm}">mortgageMonthsTerm Error</div>
+    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm" required />
     <br/>
-
-
     <input type="submit" value="Update!"/>
-
 </form>
-
 </body>
 </html>
-

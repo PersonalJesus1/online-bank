@@ -56,15 +56,14 @@ public class UsersController {
         return "redirect:/users";
     }
 
-    // Контроллер для подтверждения удаления
     @GetMapping("/confirm-delete")
     public String confirmDelete(@RequestParam("passportNumber") int passportNumber, Model model) {
-        User user = userService.show(passportNumber);  // Получаем пользователя по номеру паспорта
+        User user = userService.show(passportNumber);
         if (user == null) {
-            return "users/not-found";  // Если пользователь не найден
+            return "users/not-found";
         }
         model.addAttribute("user", user);
-        return "users/confirm-delete";  // Возвращает страницу подтверждения удаления
+        return "users/confirm-delete";
     }
 
     @DeleteMapping("/{passportNumber}/delete")

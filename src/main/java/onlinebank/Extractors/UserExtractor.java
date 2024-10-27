@@ -3,10 +3,12 @@ package onlinebank.Extractors;
 import onlinebank.models.*;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 public class UserExtractor implements ResultSetExtractor<List<User>> {
 
     @Override
@@ -20,10 +22,11 @@ public class UserExtractor implements ResultSetExtractor<List<User>> {
             user.setSex(rs.getString("sex"));
 
 
-            // Извлечение номера паспорта
+            // extract passport number номера паспорта
             user.setPassportNumber(rs.getInt("passportnumber"));
 
-            // Извлекаем списки ипотек и автокредитов из JSONB
+            /*
+            // extract lists of mortgages and autoloans from JSONB
             String mortgageJson = rs.getString("mortgagelist");
             String autoLoanJson = rs.getString("autoloanlist");
 
@@ -33,12 +36,12 @@ public class UserExtractor implements ResultSetExtractor<List<User>> {
 
             user.setMortgageList((ArrayList<Mortgage>) mortgages);
             user.setAutoLoanList((ArrayList<AutoLoan>) autoLoans);
-
+            */
             users.add(user);
         }
         return users;
     }
-
+    /*
     private List<Mortgage> parseMortgages(String json) {
         List<Mortgage> mortgages = new ArrayList<>();
 
@@ -50,4 +53,6 @@ public class UserExtractor implements ResultSetExtractor<List<User>> {
 
         return autoLoans;
     }
+    */
+
 }

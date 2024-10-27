@@ -1,6 +1,5 @@
 package onlinebank.services;
 
-import onlinebank.Extractors.UserExtractor;
 import onlinebank.dao.UserDAO;
 import onlinebank.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ public class UserService {
 
     public void save(User user) {
         userDAO.save(user);
-
     }
 
     public void update(int passportNumber, User updatedUser) {
@@ -36,6 +34,4 @@ public class UserService {
     public void delete(int passportNumber) {
         userDAO.delete(passportNumber);
     }
-
-
 }

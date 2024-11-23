@@ -1,14 +1,26 @@
 
 package onlinebank.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 
-public class DebitCard {
+@Entity
+@Table(name = "debitcard")
+public class DebitCard extends BaseEntity  {
+    @Column(name = "cardnumber")
     private String cardNumber;
+    @Column(name = "issuecarddate")
     private LocalDate issueCardDate;
+    @Column(name = "cardexpirationdate")
     private LocalDate cardExpirationDate; // 3 years
+    @Column(name = "cvvcode")
     private int cvvCode;
+    @Column(name = "cardbalance")
     private double cardBalance;
+    @Column(name = "passportnumber")
     private int passportNumber;
 
     public DebitCard(String cardNumber, LocalDate issueCardDate, LocalDate cardExpirationDate, int cvvCode, double cardBalance, int passportNumber) {

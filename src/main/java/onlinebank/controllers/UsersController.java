@@ -1,8 +1,6 @@
 package onlinebank.controllers;
 
 import jakarta.validation.Valid;
-import onlinebank.models.AutoLoan;
-import onlinebank.models.Mortgage;
 import onlinebank.models.User;
 import onlinebank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

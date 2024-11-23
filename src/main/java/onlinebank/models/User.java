@@ -1,18 +1,36 @@
 package onlinebank.models;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
-public class User {
+@Entity
+@Table(name = "bankuser")
+public class User extends BaseEntity{
+    @Column(name = "name")
     private String name;
+    @Column(name = "surname")
     private String surname;
+    @Column(name = "dateofbirth")
     private LocalDate dateOfBirth;
+    @Column(name = "sex")
     private String sex;
+    @Column(name = "passportnumber")
     private int passportNumber;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     private ArrayList<Mortgage> mortgageList;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     private ArrayList<AutoLoan> autoLoanList;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    private ArrayList<AutoLoan> debitcardList;
+
 
     public User() {
     }
@@ -81,5 +99,13 @@ public class User {
 
     public void setAutoLoanList(ArrayList<AutoLoan> autoLoanList) {
         this.autoLoanList = autoLoanList;
+    }
+
+    public ArrayList<AutoLoan> getDebitcardList() {
+        return debitcardList;
+    }
+
+    public void setDebitcardList(ArrayList<AutoLoan> debitcardList) {
+        this.debitcardList = debitcardList;
     }
 }

@@ -1,8 +1,10 @@
 package onlinebank.dao;
 
-import onlinebank.Extractors.AutoloanExtractor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import onlinebank.models.AutoLoan;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,43 +12,52 @@ import java.util.List;
 @Component
 public class AutoLoanDAO {
 
-    private JdbcTemplate jdbcTemplate;
-
-    public AutoLoanDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<AutoLoan> getAllAutoloans() {
-        return jdbcTemplate.query("select * from autoloan", new AutoloanExtractor());
-    }
-
-    public void save(AutoLoan autoloan) {
-        // Insert a new account into table autoloan
-        jdbcTemplate.update("INSERT INTO autoloan (mortgagesumm, currentmortgagesumm, mortgagemonthsterm, passportnumber) VALUES (?, ?, ?, ?)",
-                autoloan.getMortgageSumm(),
-                autoloan.getCurrentMortgageSumm(),
-                autoloan.getMortgageMonthsTerm(),
-                autoloan.getPassportNumber());
+        String hql = "FROM AutoLoan";
+        TypedQuery<AutoLoan> query = entityManager.createQuery(hql, AutoLoan.class);
+        return query.getResultList();
     }
 
     public AutoLoan show(int passportNumber, double mortgageSumm) {
-        return jdbcTemplate.query("SELECT * FROM autoloan WHERE passportNumber=? AND mortgageSumm=?",
-                        new Object[]{passportNumber, mortgageSumm}, new AutoloanExtractor())
-                .stream().findAny().orElse(null);
+        String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber AND a.mortgageSumm = :mortgageSumm";
+        TypedQuery<AutoLoan> query = entityManager.createQuery(hql, AutoLoan.class);
+        query.setParameter("passportNumber", passportNumber);
+        query.setParameter("mortgageSumm", mortgageSumm);
+        return query.getResultStream().findFirst().orElse(null);
     }
 
+    @Transactional
+    public void save(AutoLoan autoloan) {
+        entityManager.persist(autoloan);
+    }
+
+    @Transactional
     public void update(int passportNumber, double mortgageSumm, AutoLoan updatedAutoLoan) {
-        jdbcTemplate.update("UPDATE autoloan SET mortgagesumm = ?, currentmortgagesumm = ?, mortgagemonthsterm = ? " +
-                        "WHERE passportnumber = ? AND mortgagesumm = ?",
-                updatedAutoLoan.getMortgageSumm(),
-                updatedAutoLoan.getCurrentMortgageSumm(),
-                updatedAutoLoan.getMortgageMonthsTerm(),
-                passportNumber,
-                mortgageSumm);
-    }
+        // Поиск записи по номеру паспорта и сумме кредита
+        String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber AND a.mortgageSumm = :mortgageSumm";
+        TypedQuery<AutoLoan> query = entityManager.createQuery(hql, AutoLoan.class);
+        query.setParameter("passportNumber", passportNumber);
+        query.setParameter("mortgageSumm", mortgageSumm);
 
+        AutoLoan existingAutoLoan = query.getResultStream().findFirst().orElse(null);
+
+        // Если запись найдена, обновить её
+        if (existingAutoLoan != null) {
+            existingAutoLoan.setMortgageSumm(updatedAutoLoan.getMortgageSumm());
+            existingAutoLoan.setMortgageMonthsTerm(updatedAutoLoan.getMortgageMonthsTerm());
+            entityManager.merge(existingAutoLoan);
+        }
+    }
+    @Transactional
     public void delete(int passportNumber, double mortgageSumm) {
-        jdbcTemplate.update("DELETE FROM autoloan WHERE passportNumber=? AND mortgageSumm=?",
-                passportNumber, mortgageSumm);
+        String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber AND a.mortgageSumm = :mortgageSumm";
+        TypedQuery<AutoLoan> query = entityManager.createQuery(hql, AutoLoan.class);
+        AutoLoan existingAutoLoan = query.getResultStream().findFirst().orElse(null);
+        if (existingAutoLoan != null) {
+            entityManager.remove(existingAutoLoan);
+        }
     }
 }

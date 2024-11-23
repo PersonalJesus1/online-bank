@@ -1,9 +1,19 @@
 package onlinebank.models;
 
-public class Mortgage {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "mortgage")
+public class Mortgage extends BaseEntity{
+    @Column(name = "mortgagesumm")
     private double mortgageSumm;
+    @Column(name = "currentmortgagesumm")
     private double currentMortgageSumm;
+    @Column(name = "mortgageterm")
     private MortgageTerm mortgageTerm;
+    @Column(name = "passportnumber")
     private int passportNumber;
 
     public Mortgage(double mortgageSumm, double currentMortgageSumm, MortgageTerm mortgageTerm, int passportNumber) {

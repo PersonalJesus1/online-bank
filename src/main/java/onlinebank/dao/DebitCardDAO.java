@@ -1,8 +1,10 @@
 package onlinebank.dao;
 
-import onlinebank.Extractors.DebitcardExtractor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import onlinebank.models.*;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,39 +12,37 @@ import java.util.List;
 @Component
 public class DebitCardDAO {
 
-    private JdbcTemplate jdbcTemplate;
 
-    public DebitCardDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<DebitCard> getAllDebitcards() {
-        return jdbcTemplate.query("select * from debitcard", new DebitcardExtractor());
-    }
-
-    public void save(DebitCard debitCard) {
-        jdbcTemplate.update("INSERT INTO debitcard VALUES(?, ?, ?, ?,?,?)",
-                debitCard.getCardNumber(),
-                java.sql.Date.valueOf(debitCard.getIssueCardDate()),
-                java.sql.Date.valueOf(debitCard.getCardExpirationDate()),
-                debitCard.getCvvCode(),
-                debitCard.getCardBalance(),
-                debitCard.getPassportNumber());
+        String hql = "FROM DebitCard";
+        TypedQuery<DebitCard> query = entityManager.createQuery(hql, DebitCard.class);
+        return query.getResultList();
     }
 
     public DebitCard show(String cardNumber) {
-        return jdbcTemplate.query("SELECT * FROM debitcard WHERE cardNumber=?", new Object[]{cardNumber}, new DebitcardExtractor())
-                .stream().findAny().orElse(null);
+        return entityManager.find(DebitCard.class, cardNumber);
     }
 
+    @Transactional
+    public void save(DebitCard debitCard) {
+        entityManager.persist(debitCard);
+    }
+
+    @Transactional
     public void update(String cardNumber, DebitCard updatedDebitCard) {
-        jdbcTemplate.update("UPDATE debitcard SET issuecarddate=?, cardexpirationdate=?,  " +
-                        "cvvcode=?,cardbalance=?  WHERE cardNumber=?",
-                updatedDebitCard.getIssueCardDate(), updatedDebitCard.getCardExpirationDate(), updatedDebitCard.getCvvCode(),
-                updatedDebitCard.getCardBalance(), cardNumber);
+        DebitCard existingDebitCard = entityManager.find(DebitCard.class, cardNumber);
+        if (existingDebitCard != null) {
+            entityManager.merge(updatedDebitCard);
+        }
     }
-
+    @Transactional
     public void delete(String cardNumber) {
-        jdbcTemplate.update("DELETE FROM debitcard WHERE cardNumber=?", cardNumber);
+        DebitCard debitCard = entityManager.find(DebitCard.class, cardNumber);
+        if (debitCard != null) {
+            entityManager.remove(debitCard);
+        }
     }
 }

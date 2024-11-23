@@ -1,11 +1,10 @@
 package onlinebank.dao;
 
-import onlinebank.Extractors.AutoloanExtractor;
-import onlinebank.Extractors.MortgageExtractor;
-import onlinebank.Extractors.UserExtractor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import onlinebank.models.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,50 +12,50 @@ import java.util.List;
 @Component
 public class UserDAO {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<User> getAllUsers() {
-        String sql = "SELECT * FROM bankuser";
-        return jdbcTemplate.query(sql, new UserExtractor());
+        String hql = "FROM User";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
+        return query.getResultList();
     }
 
     public User show(int passportNumber) {
-        return jdbcTemplate.query("SELECT * FROM bankuser WHERE passportNumber=?", new Object[]{passportNumber}, new UserExtractor())
-                .stream().findAny().orElse(null);
+        return entityManager.find(User.class, passportNumber);
     }
+
     public List<Mortgage> showMortgages(int passportNumber) {
-        return jdbcTemplate.query("SELECT * FROM mortgage WHERE passportNumber=?",
-                new Object[]{passportNumber},
-                new MortgageExtractor());
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber";
+        TypedQuery<Mortgage> query = entityManager.createQuery(hql, Mortgage.class);
+        query.setParameter("passportNumber", passportNumber);
+        return query.getResultList();
     }
 
     public List<AutoLoan> showAutoLoans(int passportNumber) {
-        return jdbcTemplate.query("SELECT * FROM autoloan WHERE passportNumber=?",
-                new Object[]{passportNumber},
-                new AutoloanExtractor());
+        String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber";
+        TypedQuery<AutoLoan> query = entityManager.createQuery(hql, AutoLoan.class);
+        query.setParameter("passportNumber", passportNumber);
+        return query.getResultList();
     }
 
-
+    @Transactional
     public void save(User user) {
-        jdbcTemplate.update("INSERT INTO bankuser VALUES(?, ?, ?, ?, ?)",
-                user.getName(),
-                user.getSurname(),
-                java.sql.Date.valueOf(user.getDateOfBirth()),
-                user.getSex(),
-                user.getPassportNumber());
+            entityManager.persist(user);
     }
-
+    @Transactional
     public void update(int passportNumber, User updatedUser) {
-        jdbcTemplate.update("UPDATE bankuser SET name=?, surname=?, dateofbirth=?,  sex=? WHERE passportnumber=?", updatedUser.getName(),
-                updatedUser.getSurname(), updatedUser.getDateOfBirth(), updatedUser.getSex(), passportNumber);
+        User existingUser = entityManager.find(User.class, passportNumber);
+        if (existingUser != null) {
+            entityManager.merge(updatedUser);
+        }
     }
 
+    @Transactional
     public void delete(int passportNumber) {
-        jdbcTemplate.update("DELETE FROM bankuser WHERE passportNumber=?", passportNumber);
+        User user = entityManager.find(User.class, passportNumber);
+        if (user != null) {
+            entityManager.remove(user);
+        }
     }
 }

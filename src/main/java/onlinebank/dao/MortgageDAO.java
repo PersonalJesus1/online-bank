@@ -1,53 +1,63 @@
 package onlinebank.dao;
 
-import onlinebank.Extractors.MortgageExtractor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import onlinebank.models.*;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class MortgageDAO {
-    private JdbcTemplate jdbcTemplate;
-
-    public MortgageDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<Mortgage> getAllMortgages() {
-        return jdbcTemplate.query("select * from mortgage", new MortgageExtractor());
-    }
-
-    public void save(Mortgage mortgage) {
-        // Insert a new account into table mortgage
-        jdbcTemplate.update(
-                "INSERT INTO mortgage (mortgagesumm, currentmortgagesumm, mortgageterm, passportnumber) VALUES (?, ?, ?::mortgagetermenum, ?)",
-                mortgage.getMortgageSumm(),
-                mortgage.getCurrentMortgageSumm(),
-                mortgage.getMortgageTerm().name(),
-                mortgage.getPassportNumber()
-        );
+        String hql = "FROM Mortgage";
+        TypedQuery<Mortgage> query = entityManager.createQuery(hql, Mortgage.class);
+        return query.getResultList();
     }
 
     public Mortgage show(int passportNumber, double mortgageSumm) {
-        return jdbcTemplate.query("SELECT * FROM mortgage WHERE passportNumber=? AND mortgageSumm=?",
-                        new Object[]{passportNumber, mortgageSumm}, new MortgageExtractor())
-                .stream().findAny().orElse(null);
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
+        TypedQuery<Mortgage> query = entityManager.createQuery(hql, Mortgage.class);
+        query.setParameter("passportNumber", passportNumber);
+        query.setParameter("mortgageSumm", mortgageSumm);
+        return query.getResultStream().findFirst().orElse(null);
     }
 
+    @Transactional
+    public void save(Mortgage mortgage) {
+        entityManager.persist(mortgage);
+    }
+
+    @Transactional
     public void update(int passportNumber, double mortgageSumm, Mortgage updatedMortgage) {
-        jdbcTemplate.update("UPDATE mortgage SET mortgagesumm = ?, currentmortgagesumm = ?, mortgageterm = ?::mortgagetermenum " +
-                        "WHERE passportnumber = ? AND mortgagesumm = ?",
-                updatedMortgage.getMortgageSumm(),
-                updatedMortgage.getCurrentMortgageSumm(),
-                updatedMortgage.getMortgageTerm().name(),
-                passportNumber,
-                mortgageSumm);
+        // Поиск записи по номеру паспорта и сумме кредита
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
+        TypedQuery<Mortgage> query = entityManager.createQuery(hql, Mortgage.class);
+        query.setParameter("passportNumber", passportNumber);
+        query.setParameter("mortgageSumm", mortgageSumm);
+
+        Mortgage existingMortgage = query.getResultStream().findFirst().orElse(null);
+
+        // Если запись найдена, обновить её
+        if (existingMortgage != null) {
+            existingMortgage.setMortgageSumm(updatedMortgage.getMortgageSumm());
+            existingMortgage.setMortgageTerm(updatedMortgage.getMortgageTerm());
+            entityManager.merge(existingMortgage);
+        }
     }
 
+    @Transactional
     public void delete(int passportNumber, double mortgageSumm) {
-        jdbcTemplate.update("DELETE FROM mortgage WHERE passportNumber=? AND mortgageSumm=?",
-                passportNumber, mortgageSumm);
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
+        TypedQuery<Mortgage> query = entityManager.createQuery(hql, Mortgage.class);
+        Mortgage existingMortgage = query.getResultStream().findFirst().orElse(null);
+        if (existingMortgage != null) {
+            entityManager.remove(existingMortgage);
+        }
     }
 }

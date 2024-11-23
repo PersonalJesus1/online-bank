@@ -1,9 +1,19 @@
 package onlinebank.models;
 
-public class AutoLoan {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "autoloan")
+public class AutoLoan extends BaseEntity  {
+    @Column(name = "mortgagesumm")
     private double mortgageSumm;
+    @Column(name = "currentmortgagesumm")
     private double currentMortgageSumm;
+    @Column(name = "mortgagemonthsterm")
     private int mortgageMonthsTerm;
+    @Column(name = "passportnumber")
     private int passportNumber;
 
     public AutoLoan(double mortgageSumm, double currentMortgageSumm, int mortgageMonthsTerm, int passportNumber) {

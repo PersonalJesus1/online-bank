@@ -1,48 +1,68 @@
 package onlinebank.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import onlinebank.models.*;
-import org.springframework.stereotype.Component;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-@Component
+@Repository
 public class DebitCardDAO {
 
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private SessionFactory sessionFactory;
 
     public List<DebitCard> getAllDebitcards() {
-        String hql = "FROM DebitCard";
-        TypedQuery<DebitCard> query = entityManager.createQuery(hql, DebitCard.class);
-        return query.getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM DebitCard", DebitCard.class).getResultList();
+        }
     }
 
     public DebitCard show(String cardNumber) {
-        return entityManager.find(DebitCard.class, cardNumber);
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(DebitCard.class, cardNumber);
+        }
     }
 
     @Transactional
     public void save(DebitCard debitCard) {
-        entityManager.persist(debitCard);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(debitCard);
+            transaction.commit();
+        }
     }
 
     @Transactional
     public void update(String cardNumber, DebitCard updatedDebitCard) {
-        DebitCard existingDebitCard = entityManager.find(DebitCard.class, cardNumber);
-        if (existingDebitCard != null) {
-            entityManager.merge(updatedDebitCard);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            DebitCard existingDebitCard = session.get(DebitCard.class, cardNumber);
+
+            if (existingDebitCard != null) {
+                existingDebitCard.setCardNumber(updatedDebitCard.getCardNumber());
+                existingDebitCard.setCardExpirationDate(updatedDebitCard.getCardExpirationDate());
+                existingDebitCard.setCardBalance(updatedDebitCard.getCardBalance());
+                session.update(existingDebitCard);
+            }
+            transaction.commit();
         }
     }
+
     @Transactional
     public void delete(String cardNumber) {
-        DebitCard debitCard = entityManager.find(DebitCard.class, cardNumber);
-        if (debitCard != null) {
-            entityManager.remove(debitCard);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            DebitCard debitCard = session.get(DebitCard.class, cardNumber);
+
+            if (debitCard != null) {
+                session.delete(debitCard);
+            }
+            transaction.commit();
         }
     }
 }

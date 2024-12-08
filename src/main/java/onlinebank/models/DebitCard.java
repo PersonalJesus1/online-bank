@@ -1,15 +1,16 @@
 
 package onlinebank.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "debitcard")
-public class DebitCard extends BaseEntity  {
+public class DebitCard   {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
     @Column(name = "cardnumber")
     private String cardNumber;
     @Column(name = "issuecarddate")

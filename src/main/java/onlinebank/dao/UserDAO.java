@@ -1,61 +1,80 @@
 package onlinebank.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import onlinebank.models.*;
-import org.springframework.stereotype.Component;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-@Component
+@Repository
 public class UserDAO {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private SessionFactory sessionFactory;
 
     public List<User> getAllUsers() {
-        String hql = "FROM User";
-        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
-        return query.getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from User", User.class).getResultList();
+        }
     }
 
     public User show(int passportNumber) {
-        return entityManager.find(User.class, passportNumber);
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(User.class, passportNumber);
+        }
     }
 
     public List<Mortgage> showMortgages(int passportNumber) {
-        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber";
-        TypedQuery<Mortgage> query = entityManager.createQuery(hql, Mortgage.class);
-        query.setParameter("passportNumber", passportNumber);
-        return query.getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber";
+            return session.createQuery(hql, Mortgage.class)
+                    .setParameter("passportNumber", passportNumber)
+                    .getResultList();
+        }
     }
 
     public List<AutoLoan> showAutoLoans(int passportNumber) {
-        String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber";
-        TypedQuery<AutoLoan> query = entityManager.createQuery(hql, AutoLoan.class);
-        query.setParameter("passportNumber", passportNumber);
-        return query.getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber";
+            return session.createQuery(hql, AutoLoan.class)
+                    .setParameter("passportNumber", passportNumber)
+                    .getResultList();
+        }
     }
 
     @Transactional
     public void save(User user) {
-            entityManager.persist(user);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(user);
+            transaction.commit();
+        }
     }
+
     @Transactional
     public void update(int passportNumber, User updatedUser) {
-        User existingUser = entityManager.find(User.class, passportNumber);
-        if (existingUser != null) {
-            entityManager.merge(updatedUser);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            User existingUser = session.get(User.class, passportNumber);
+            if (existingUser != null) {
+                session.merge(updatedUser);
+            }
+            transaction.commit();
         }
     }
 
     @Transactional
     public void delete(int passportNumber) {
-        User user = entityManager.find(User.class, passportNumber);
-        if (user != null) {
-            entityManager.remove(user);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            User user = session.get(User.class, passportNumber);
+            if (user != null) {
+                session.delete(user);
+            }
+            transaction.commit();
         }
     }
 }

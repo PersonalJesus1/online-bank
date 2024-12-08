@@ -7,7 +7,12 @@ import java.util.ArrayList;
 
 @Entity
 @Table(name = "bankuser")
-public class User extends BaseEntity{
+public class User {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "name")
     private String name;
     @Column(name = "surname")

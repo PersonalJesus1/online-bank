@@ -1,12 +1,14 @@
 package onlinebank.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "mortgage")
-public class Mortgage extends BaseEntity{
+public class Mortgage {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
     @Column(name = "mortgagesumm")
     private double mortgageSumm;
     @Column(name = "currentmortgagesumm")

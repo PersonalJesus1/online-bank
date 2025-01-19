@@ -14,6 +14,7 @@
         <th>CurrentMortgageSumm</th>
         <th>MortgageTerm</th>
         <th>PassportNumber</th>
+        <th>Pay</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -25,6 +26,12 @@
         <td th:text="${mortgage.currentMortgageSumm}"></td>
         <td th:text="${mortgage.mortgageTerm}"></td>
         <td th:text="${mortgage.passportNumber}"></td>
+        <!-- Button to pay -->
+        <td>
+            <form th:action="@{/mortgages/{id}/payment(id=${mortgage.id})}" method="get">
+                <input type="submit" value="Pay"/>
+            </form>
+        </td>
         <!-- Button to edit -->
         <td>
             <form th:action="@{/mortgages/{passportNumber}/{mortgageSumm}/edit(
@@ -51,7 +58,7 @@
 <a href="/mortgages/new">Create a new mortgage</a>
 <br/>
 <!-- Button to get back to the main page -->
-<a href="/online-bank">To get back to the main page of website</a>
+<a href="/">To get back to the main page of website</a>
 <br>
 </body>
 </html>

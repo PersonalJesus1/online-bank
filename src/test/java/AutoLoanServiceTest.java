@@ -1,5 +1,10 @@
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import onlinebank.dao.AutoLoanDAO;
+import onlinebank.dao.UserDAO;
 import onlinebank.models.AutoLoan;
+import onlinebank.models.AutoloanPayment;
 import onlinebank.services.AutoLoanService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,93 +15,125 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 public class AutoLoanServiceTest {
 
     @Mock
     private AutoLoanDAO autoLoanDAO;
 
+    @Mock
+    private UserDAO userDAO;
+
     @InjectMocks
     private AutoLoanService autoLoanService;
+
+    private AutoLoan autoLoan;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        autoLoan = new AutoLoan(1000.0, 500.0, 24, 123456);
     }
 
     @Test
-    void testGetAllAutoloans() {
-        // Arrange
-        List<AutoLoan> expectedLoans = Arrays.asList(
-                new AutoLoan(85000, 85000, 12, 2585944),
-                new AutoLoan(120000, 120000, 15, 4185257),
-                new AutoLoan(100000, 100000, 13, 8591258),
-                new AutoLoan(115000, 115000, 14, 8529524)
-        );
+    void getAllAutoloans_shouldReturnAllAutoloans() {
+        List<AutoLoan> autoLoans = Arrays.asList(autoLoan, new AutoLoan(2000.0, 1500.0, 36, 654321));
+        when(autoLoanDAO.getAllAutoloans()).thenReturn(autoLoans);
 
-        when(autoLoanDAO.getAllAutoloans()).thenReturn(expectedLoans);
+        List<AutoLoan> result = autoLoanService.getAllAutoloans();
 
-        // Act
-        List<AutoLoan> actualLoans = autoLoanService.getAllAutoloans();
-
-        // Assert
-        assertEquals(expectedLoans, actualLoans, "The list of auto loans should match the expected list.");
+        assertEquals(2, result.size());
+        verify(autoLoanDAO, times(1)).getAllAutoloans();
     }
 
     @Test
-    void testSaveAutoLoan() {
-        // Arrange
-        AutoLoan newAutoLoan = new AutoLoan(90000, 90000, 12, 1234567);
+    void save_shouldSaveAutoLoanSuccessfully() {
+        when(userDAO.existsByPassportNumber(autoLoan.getPassportNumber())).thenReturn(true);
+        when(userDAO.countLoansAndMortgagesByPassportNumber(autoLoan.getPassportNumber())).thenReturn(2);
 
-        // Act
-        autoLoanService.save(newAutoLoan);
-
-        // Assert
-        verify(autoLoanDAO, times(1)).save(newAutoLoan);
+        assertDoesNotThrow(() -> autoLoanService.save(autoLoan));
+        verify(autoLoanDAO, times(1)).save(autoLoan);
     }
 
     @Test
-    void testUpdateAutoLoan() {
-        // Arrange
-        int passportNumber = 1234567;
-        double mortgageSumm = 90000;
-        AutoLoan updatedAutoLoan = new AutoLoan(95000, 95000, 15, passportNumber);
+    void save_shouldThrowExceptionWhenUserNotFound() {
+        when(userDAO.existsByPassportNumber(autoLoan.getPassportNumber())).thenReturn(false);
 
-        // Act
-        autoLoanService.update(passportNumber, mortgageSumm, updatedAutoLoan);
-
-        // Assert
-        verify(autoLoanDAO, times(1)).update(passportNumber, mortgageSumm, updatedAutoLoan);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> autoLoanService.save(autoLoan));
+        assertEquals("No user found with passport number 123456", exception.getMessage());
+        verify(autoLoanDAO, never()).save(any(AutoLoan.class));
     }
 
     @Test
-    void testShowAutoLoan() {
-        // Arrange
-        int passportNumber = 1234567;
-        double mortgageSumm = 90000;
-        AutoLoan expectedAutoLoan = new AutoLoan(mortgageSumm, 90000, 12, passportNumber);
+    void save_shouldThrowExceptionWhenUserHasTooManyLoans() {
+        when(userDAO.existsByPassportNumber(autoLoan.getPassportNumber())).thenReturn(true);
+        when(userDAO.countLoansAndMortgagesByPassportNumber(autoLoan.getPassportNumber())).thenReturn(3);
 
-        when(autoLoanDAO.show(passportNumber, mortgageSumm)).thenReturn(expectedAutoLoan);
-
-        // Act
-        AutoLoan actualAutoLoan = autoLoanService.show(passportNumber, mortgageSumm);
-
-        // Assert
-        assertEquals(expectedAutoLoan, actualAutoLoan, "The auto loan returned should match the expected loan.");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> autoLoanService.save(autoLoan));
+        assertEquals("The user already has too many loans or mortgages.", exception.getMessage());
+        verify(autoLoanDAO, never()).save(any(AutoLoan.class));
     }
 
     @Test
-    void testDeleteAutoLoan() {
-        // Arrange
-        int passportNumber = 1234567;
-        double mortgageSumm = 90000;
+    void update_shouldUpdateAutoLoanSuccessfully() {
+        AutoLoan updatedAutoLoan = new AutoLoan(1200.0, 800.0, 12, 123456);
 
-        // Act
-        autoLoanService.delete(passportNumber, mortgageSumm);
+        assertDoesNotThrow(() -> autoLoanService.update(123456, 1000.0, updatedAutoLoan));
+        verify(autoLoanDAO, times(1)).update(123456, 1000.0, updatedAutoLoan);
+    }
 
-        // Assert
-        verify(autoLoanDAO, times(1)).delete(passportNumber, mortgageSumm);
+    @Test
+    void show_shouldReturnAutoLoan() {
+        when(autoLoanDAO.show(123456, 1000.0)).thenReturn(autoLoan);
+
+        AutoLoan result = autoLoanService.show(123456, 1000.0);
+
+        assertNotNull(result);
+        assertEquals(123456, result.getPassportNumber());
+        verify(autoLoanDAO, times(1)).show(123456, 1000.0);
+    }
+
+    @Test
+    void delete_shouldDeleteAutoLoanSuccessfully() {
+        assertDoesNotThrow(() -> autoLoanService.delete(123456, 1000.0));
+        verify(autoLoanDAO, times(1)).delete(123456, 1000.0);
+    }
+
+    @Test
+    void makePayment_shouldUpdateBalanceSuccessfully() {
+        AutoloanPayment payment = new AutoloanPayment(1L, 200.0);
+        when(autoLoanDAO.findById(payment.getId())).thenReturn(autoLoan);
+
+        assertDoesNotThrow(() -> autoLoanService.makePayment(payment));
+        verify(autoLoanDAO, times(1)).update(eq(autoLoan.getId()), any(AutoLoan.class));
+    }
+
+    @Test
+    void makePayment_shouldThrowExceptionWhenAutoLoanNotFound() {
+        AutoloanPayment payment = new AutoloanPayment(1L, 200.0);
+        when(autoLoanDAO.findById(payment.getId())).thenReturn(null);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> autoLoanService.makePayment(payment));
+        assertEquals("This autoloan doesn't exist", exception.getMessage());
+        verify(autoLoanDAO, never()).update(anyLong(), any(AutoLoan.class));
+    }
+
+    @Test
+    void makePayment_shouldThrowExceptionWhenPaymentAmountIsZeroOrNegative() {
+        AutoloanPayment payment = new AutoloanPayment(1L, -200.0);
+        when(autoLoanDAO.findById(payment.getId())).thenReturn(autoLoan);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> autoLoanService.makePayment(payment));
+        assertEquals("Payment amount must be greater than zero", exception.getMessage());
+        verify(autoLoanDAO, never()).update(anyLong(), any(AutoLoan.class));
+    }
+
+    @Test
+    void makePayment_shouldThrowExceptionWhenPaymentExceedsBalance() {
+        AutoloanPayment payment = new AutoloanPayment(1L, 600.0);
+        when(autoLoanDAO.findById(payment.getId())).thenReturn(autoLoan);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> autoLoanService.makePayment(payment));
+        assertEquals("Payment exceeds the remaining loan balance", exception.getMessage());
+        verify(autoLoanDAO, never()).update(anyLong(), any(AutoLoan.class));
     }
 }

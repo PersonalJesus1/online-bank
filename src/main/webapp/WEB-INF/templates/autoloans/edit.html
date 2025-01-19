@@ -27,9 +27,13 @@ mortgageSumm=${autoloan.mortgageSumm})}" method="post" th:object="${autoloan}">
     <br/>
     <!-- mortgageMonthsTerm Field -->
     <label for="mortgageMonthsTerm">Enter mortgageMonthsTerm: </label>
-    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm" required />
+    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm" min="1" required />
     <br/>
     <input type="submit" value="Update!"/>
+
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
 </form>
 </body>
 </html>

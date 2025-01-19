@@ -2,6 +2,7 @@ package onlinebank.controllers;
 
 import jakarta.validation.Valid;
 import onlinebank.models.Mortgage;
+import onlinebank.models.MortgagePayment;
 import onlinebank.services.MortgageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,13 +34,26 @@ public class MortgagesController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("mortgage") @Valid Mortgage mortgage, BindingResult bindingResult) {
+    public String create(@ModelAttribute("mortgage") @Valid Mortgage mortgage, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "mortgages/newMortgage";
         }
-        mortgageService.save(mortgage);
+
+    if (!mortgageService.existsByPassportNumber(mortgage.getPassportNumber())) {
+            model.addAttribute("error", "Passport number doesn't exist.");
+            return "mortgages/newMortgage";
+        }
+
+        try {
+            mortgageService.save(mortgage);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "mortgages/newMortgage";
+        }
+
         return "redirect:/mortgages";
     }
+
 
     @GetMapping("/{passportNumber}/{mortgageSumm}/edit")
     public String edit(Model model,
@@ -76,5 +90,27 @@ public class MortgagesController {
                          @PathVariable("mortgageSumm") double mortgageSumm) {
         mortgageService.delete(passportNumber, mortgageSumm);
         return "redirect:/mortgages";
+    }
+
+    //payment
+    @GetMapping("/{id}/payment")
+    public String showPaymentPage(@PathVariable("id") Long id, Model model) {
+        MortgagePayment mortgagePayment = new MortgagePayment();
+        mortgagePayment.setId(id);
+        model.addAttribute("mortgagePayment", mortgagePayment);
+        return "mortgages/payment";
+    }
+
+    @PatchMapping("/{id}/payment")
+    public String processPayment(@ModelAttribute("mortgagePayment") MortgagePayment mortgagePayment,
+                                 @PathVariable("id") Long id, Model model) {
+        try {
+            mortgagePayment.setId(id);
+            mortgageService.makePayment(mortgagePayment);
+            return "redirect:/mortgages";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "mortgages/payment";
+        }
     }
 }

@@ -17,6 +17,7 @@
         <th>cardBalance</th>
         <th>passportNumber</th>
         <th>Edit</th>
+        <th>Deposit</th>
         <th>Delete</th>
     </tr>
     </thead>
@@ -29,19 +30,28 @@
         <td th:text="${debitcard.cvvCode}"></td>
         <td th:text="${debitcard.cardBalance}"></td>
         <td th:text="${debitcard.passportNumber}"></td>
+
         <!-- Button to edit -->
         <td>
-            <form th:action="@{/debitcards/{cardNumber}/edit(cardNumber=${debitcard.cardNumber})}" method="get">
+            <form th:action="@{/debitcards/{passportNumber}/{cardNumber}/edit(cardNumber=${debitcard.cardNumber},
+            passportNumber=${debitcard.passportNumber})}" method="get">
                 <input type="submit" value="Edit"/>
+            </form>
+        </td>
+        <!-- Button to deposit -->
+        <td>
+            <form th:action="@{/debitcards/{cardNumber}/deposit(cardNumber=${debitcard.cardNumber})} " method="get">
+                <input type="submit" value="Deposit"/>
             </form>
         </td>
         <!-- Button to delete -->
         <td>
-            <form th:action="@{/debitcards/{cardNumber}/delete(cardNumber=${debitcard.cardNumber})}" method="post">
-                <input type="hidden" name="_method" value="delete"/>
-                <input type="submit" value="Delete"
-                       onclick="return confirm('Are you sure you want to delete this debitcard?');"/>
+
+            <form th:action="@{/debitcards/{passportNumber}/{cardNumber}/delete(cardNumber=${debitcard.cardNumber},
+            passportNumber=${debitcard.passportNumber})}" method="get">
+                <input type="submit" value="Delete"/>
             </form>
+
         </td>
     </tr>
     </tbody>
@@ -50,7 +60,10 @@
 <!-- Button to create a new debitcard -->
 <a href="/debitcards/new">Create a new debitcard</a>
 <br>
+<!-- Button to transfer money -->
+<a href="/debitcards/transfer">Transfer Money</a>
+<br>
 <!-- Button to get back to the main page -->
-<a href="/online-bank">Back to main page</a>
+<a href="/">Back to main page</a>
 </body>
 </html>

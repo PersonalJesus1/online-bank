@@ -1,18 +1,22 @@
 package onlinebank.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "autoloan")
-public class AutoLoan  {
+public class AutoLoan {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "mortgagesumm")
+    @Min(value = 100, message = "Summ must be at least 100")
     private double mortgageSumm;
     @Column(name = "currentmortgagesumm")
     private double currentMortgageSumm;
+
+    @Min(value = 1, message = "Mortgage months term must be at least 1")
     @Column(name = "mortgagemonthsterm")
     private int mortgageMonthsTerm;
     @Column(name = "passportnumber")
@@ -26,7 +30,14 @@ public class AutoLoan  {
     }
 
     public AutoLoan() {
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getMortgageSumm() {

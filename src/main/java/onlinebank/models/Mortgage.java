@@ -1,21 +1,27 @@
 package onlinebank.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "mortgage")
 public class Mortgage {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "mortgagesumm")
+    @NotNull(message = "Mortgage Summ cannot be null")
+    @Min(value = 100, message = "Summ must be at least 100")
     private double mortgageSumm;
     @Column(name = "currentmortgagesumm")
     private double currentMortgageSumm;
+    @Enumerated(EnumType.STRING)
     @Column(name = "mortgageterm")
     private MortgageTerm mortgageTerm;
     @Column(name = "passportnumber")
+    @NotNull(message = "Passport number cannot be null")
     private int passportNumber;
 
     public Mortgage(double mortgageSumm, double currentMortgageSumm, MortgageTerm mortgageTerm, int passportNumber) {
@@ -26,7 +32,17 @@ public class Mortgage {
     }
 
     public Mortgage() {
+    }
 
+    public Mortgage(int mortgageSumm, int currentMortgageSumm, String fifteenyears, int passportNumber) {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getMortgageSumm() {

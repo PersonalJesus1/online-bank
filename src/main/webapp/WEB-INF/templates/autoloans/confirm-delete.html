@@ -8,10 +8,9 @@
 <h2>Are you sure you want to delete this autoloan with mortgageSumm: <span th:text="${autoloan.mortgageSumm}"></span>,
     passportNumber: <span th:text="${autoloan.passportNumber}"></span>?</h2>
 <td>
-    <form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/delete
-    (passportNumber=${autoloan.passportNumber}, mortgageSumm=${autoloan.mortgageSumm})}" method="post">
-        <input type="hidden" name="_method" value="delete" />
-        <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this autoloan?');"/>
+    <form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/delete(passportNumber=${autoloan.passportNumber},
+     mortgageSumm=${autoloan.mortgageSumm})}" method="post">
+        <input type="submit" value="Delete"/>
     </form>
 </td>
 <a href="/autoloans">Cancel</a>

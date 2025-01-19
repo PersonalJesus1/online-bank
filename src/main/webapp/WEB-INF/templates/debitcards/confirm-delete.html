@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Delete</title>
+</head>
+<body>
+<h2>Are you sure you want to delete debitcard with  number: <span th:text="${debitcard.cardNumber}"></span>?</h2>
+<form th:action="@{/debitcards/{passportNumber}/{cardNumber}/delete(cardNumber=${debitcard.cardNumber},
+            passportNumber=${debitcard.passportNumber})}" method="post">
+    <input type="submit" value="Delete"/>
+</form>
+
+<a href="/debitcards">Cancel</a>
+</body>
+</html>

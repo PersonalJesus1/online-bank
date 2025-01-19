@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,30 +24,31 @@ public class UserService {
         return userDAO.getAllUsers();
     }
 
+
     @Transactional
     public void save(User user) {
         userDAO.save(user);
     }
+
     @Transactional(readOnly = true)
     public User show(int passportNumber) {
         return userDAO.show(passportNumber);
     }
 
     @Transactional(readOnly = true)
-    public ArrayList<Mortgage> showMortgages(int passportNumber) {
-        return (ArrayList<Mortgage>) userDAO.showMortgages(passportNumber);
+    public List<Mortgage> showMortgages(int passportNumber) {
+        return userDAO.showMortgages(passportNumber);
     }
 
     @Transactional(readOnly = true)
-    public ArrayList<AutoLoan> showAutoLoans(int passportNumber) {
-        return (ArrayList<AutoLoan>) userDAO.showAutoLoans(passportNumber);
+    public List<AutoLoan> showAutoLoans(int passportNumber) {
+        return userDAO.showAutoLoans(passportNumber);
     }
 
     @Transactional
     public void update(int passportNumber, User updatedUser) {
         userDAO.update(passportNumber, updatedUser);
     }
-
 
     @Transactional
     public void delete(int passportNumber) {

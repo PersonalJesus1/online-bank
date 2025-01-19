@@ -42,6 +42,7 @@ public class UsersController {
     @PostMapping
     public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
             return "users/newUser";
         }
         userService.save(user);
@@ -50,19 +51,27 @@ public class UsersController {
 
     @GetMapping("/{passportNumber}/edit")
     public String edit(Model model, @PathVariable("passportNumber") int passportNumber) {
-        model.addAttribute("user", userService.show(passportNumber));
+        User user = userService.show(passportNumber);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        model.addAttribute("user", user);
         return "users/edit";
     }
 
     @PatchMapping("/{passportNumber}/edit")
-    public String updateUserupdateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                                       @PathVariable("passportNumber") int passportNumber) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                             @PathVariable("passportNumber") int passportNumber) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
+            return "users/edit";
+        }
         userService.update(passportNumber, user);
         return "redirect:/users";
     }
 
-    @GetMapping("/confirm-delete")
-    public String confirmDelete(@RequestParam("passportNumber") int passportNumber, Model model) {
+    @GetMapping("/{passportNumber}/delete")
+    public String confirmDelete(@PathVariable("passportNumber") int passportNumber, Model model) {
         User user = userService.show(passportNumber);
         if (user == null) {
             return "users/not-found";
@@ -71,7 +80,7 @@ public class UsersController {
         return "users/confirm-delete";
     }
 
-    @DeleteMapping("/{passportNumber}/delete")
+    @PostMapping("/{passportNumber}/delete")
     public String delete(@PathVariable("passportNumber") int passportNumber) {
         userService.delete(passportNumber);
         return "redirect:/users";

@@ -1,14 +1,13 @@
 package onlinebank.dao;
 
-import jakarta.transaction.Transactional;
 import onlinebank.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 @Repository
 public class UserDAO {
 
@@ -16,65 +15,79 @@ public class UserDAO {
     private SessionFactory sessionFactory;
 
     public List<User> getAllUsers() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from User", User.class).getResultList();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from User", User.class).getResultList();
     }
 
     public User show(int passportNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(User.class, passportNumber);
-        }
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM User u WHERE u.passportNumber = :passportNumber";
+        return session.createQuery(hql, User.class)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
     }
 
     public List<Mortgage> showMortgages(int passportNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber";
-            return session.createQuery(hql, Mortgage.class)
-                    .setParameter("passportNumber", passportNumber)
-                    .getResultList();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber";
+        return session.createQuery(hql, Mortgage.class)
+                .setParameter("passportNumber", passportNumber)
+                .getResultList();
     }
 
     public List<AutoLoan> showAutoLoans(int passportNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber";
-            return session.createQuery(hql, AutoLoan.class)
-                    .setParameter("passportNumber", passportNumber)
-                    .getResultList();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM AutoLoan a WHERE a.passportNumber = :passportNumber";
+        return session.createQuery(hql, AutoLoan.class)
+                .setParameter("passportNumber", passportNumber)
+                .getResultList();
     }
 
-    @Transactional
+    public boolean existsByPassportNumber(int passportNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(*) > 0 FROM User u WHERE u.passportNumber = :passportNumber";
+        return session.createQuery(hql, Boolean.class)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
+    }
     public void save(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        session.save(user);
     }
 
-    @Transactional
     public void update(int passportNumber, User updatedUser) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            User existingUser = session.get(User.class, passportNumber);
-            if (existingUser != null) {
-                session.merge(updatedUser);
-            }
-            transaction.commit();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM User u WHERE u.passportNumber = :passportNumber";
+        User existingUser = session.createQuery(hql, User.class)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
+        if (existingUser != null) {
+            existingUser.setName(updatedUser.getName());
+            existingUser.setSurname(updatedUser.getSurname());
+            existingUser.setDateOfBirth(updatedUser.getDateOfBirth());
+            existingUser.setSex(updatedUser.getSex());
+            session.update(existingUser);
+        } else System.out.println("User not found");
     }
 
-    @Transactional
     public void delete(int passportNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            User user = session.get(User.class, passportNumber);
-            if (user != null) {
-                session.delete(user);
-            }
-            transaction.commit();
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM User u WHERE u.passportNumber = :passportNumber";
+        User user = session.createQuery(hql, User.class)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
+        if (user != null) {
+            session.delete(user);
         }
+    }
+    public int countLoansAndMortgagesByPassportNumber(int passportNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = """
+                SELECT (SELECT COUNT(*) FROM AutoLoan WHERE passportNumber = :passportNumber)
+                     + (SELECT COUNT(*) FROM Mortgage WHERE passportNumber = :passportNumber)
+                """;
+        return ((Long) session.createQuery(hql)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult()).intValue();
     }
 }

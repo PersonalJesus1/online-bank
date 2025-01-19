@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Deposit Money</title>
+</head>
+<body>
+<h2>Deposit Money</h2>
+
+<form method="POST" th:action="@{/debitcards/{cardNumber}/deposit(cardNumber=${depositRequest.cardNumber})}"
+      th:object="${depositRequest}">
+    <input type="hidden" name="_method" value="PATCH"/>
+    <input type="hidden" th:field="*{cardNumber}" />
+
+    <br/>
+    <label for="amount">Amount:</label>
+    <input type="number" th:field="*{amount}" id="amount" step="0.01" required/>
+    <br/>
+
+    <input type="submit" value="Deposit Money"/>
+</form>
+
+
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+
+<a href="/debitcards">Back to Debit Cards</a>
+</body>
+</html>

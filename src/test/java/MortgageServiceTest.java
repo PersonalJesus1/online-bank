@@ -1,101 +1,141 @@
 import onlinebank.dao.MortgageDAO;
+import onlinebank.dao.UserDAO;
 import onlinebank.models.Mortgage;
+import onlinebank.models.MortgagePayment;
 import onlinebank.models.MortgageTerm;
 import onlinebank.services.MortgageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class MortgageServiceTest {
 
     @Mock
     private MortgageDAO mortgageDAO;
 
+    @Mock
+    private UserDAO userDAO;
+
     @InjectMocks
     private MortgageService mortgageService;
 
+    private Mortgage testMortgage;
+
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setup() {
+        testMortgage = new Mortgage(1000, 500, MortgageTerm.FIFTEENYEARS, 123456);
+        testMortgage.setId(1L);
     }
 
     @Test
-    void testGetAllMortgages() {
-        // Arrange
-        List<Mortgage> expectedMortgages = Arrays.asList(
-                new Mortgage(200000.0, 150000.0, MortgageTerm.TENYEARS, 123456),
-                new Mortgage(300000.0, 250000.0, MortgageTerm.FIFTEENYEARS, 654321)
-        );
+    public void testGetAllMortgages() {
+        when(mortgageDAO.getAllMortgages()).thenReturn(Arrays.asList(testMortgage));
 
-        when(mortgageDAO.getAllMortgages()).thenReturn(expectedMortgages);
+        List<Mortgage> result = mortgageService.getAllMortgages();
 
-        // Act
-        List<Mortgage> actualMortgages = mortgageService.getAllMortgages();
-
-        // Assert
-        assertEquals(expectedMortgages, actualMortgages, "The list of mortgages should match the expected list.");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(mortgageDAO, times(1)).getAllMortgages();
     }
 
     @Test
-    void testShowMortgage() {
-        // Arrange
-        int passportNumber = 123456;
-        double mortgageSumm = 200000.0;
-        Mortgage expectedMortgage = new Mortgage(mortgageSumm, 150000.0, MortgageTerm.TENYEARS, passportNumber);
+    public void testSaveValidMortgage() {
+        when(userDAO.existsByPassportNumber(testMortgage.getPassportNumber())).thenReturn(true);
+        when(userDAO.countLoansAndMortgagesByPassportNumber(testMortgage.getPassportNumber())).thenReturn(2);
 
-        when(mortgageDAO.show(passportNumber, mortgageSumm)).thenReturn(expectedMortgage);
+        assertDoesNotThrow(() -> mortgageService.save(testMortgage));
 
-        // Act
-        Mortgage actualMortgage = mortgageService.show(passportNumber, mortgageSumm);
-
-        // Assert
-        assertEquals(expectedMortgage, actualMortgage, "The mortgage should match the expected mortgage.");
+        verify(mortgageDAO, times(1)).save(testMortgage);
     }
 
     @Test
-    void testSaveMortgage() {
-        // Arrange
-        Mortgage mortgage = new Mortgage(200000.0, 150000.0, MortgageTerm.TENYEARS, 123456);
+    public void testSaveNonExistentUser() {
+        when(userDAO.existsByPassportNumber(testMortgage.getPassportNumber())).thenReturn(false);
 
-        // Act
-        mortgageService.save(mortgage);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> mortgageService.save(testMortgage));
 
-        // Assert
-        verify(mortgageDAO, times(1)).save(mortgage);
+        assertEquals("No user found with passport number 123456", exception.getMessage());
+        verify(mortgageDAO, never()).save(any(Mortgage.class));
     }
 
     @Test
-    void testUpdateMortgage() {
-        // Arrange
-        int passportNumber = 123456;
-        double mortgageSumm = 200000.0;
-        Mortgage updatedMortgage = new Mortgage(mortgageSumm, 140000.0, MortgageTerm.TWENTYYEARS, passportNumber);
+    public void testSaveTooManyLoans() {
+        when(userDAO.existsByPassportNumber(testMortgage.getPassportNumber())).thenReturn(true);
+        when(userDAO.countLoansAndMortgagesByPassportNumber(testMortgage.getPassportNumber())).thenReturn(3);
 
-        // Act
-        mortgageService.update(passportNumber, mortgageSumm, updatedMortgage);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> mortgageService.save(testMortgage));
 
-        // Assert
-        verify(mortgageDAO, times(1)).update(passportNumber, mortgageSumm, updatedMortgage);
+        assertEquals("The user already has too many loans or mortgages.", exception.getMessage());
+        verify(mortgageDAO, never()).save(any(Mortgage.class));
     }
 
     @Test
-    void testDeleteMortgage() {
-        // Arrange
-        int passportNumber = 123456;
-        double mortgageSumm = 200000.0;
+    public void testUpdate() {
+        doNothing().when(mortgageDAO).update(anyInt(), anyDouble(), any(Mortgage.class));
 
-        // Act
-        mortgageService.delete(passportNumber, mortgageSumm);
+        assertDoesNotThrow(() -> mortgageService.update(123456, 1000, testMortgage));
 
-        // Assert
-        verify(mortgageDAO, times(1)).delete(passportNumber, mortgageSumm);
+        verify(mortgageDAO, times(1)).update(123456, 1000, testMortgage);
+    }
+
+    @Test
+    public void testShow() {
+        when(mortgageDAO.show(123456, 1000)).thenReturn(testMortgage);
+
+        Mortgage result = mortgageService.show(123456, 1000);
+
+        assertNotNull(result);
+        assertEquals(testMortgage, result);
+        verify(mortgageDAO, times(1)).show(123456, 1000);
+    }
+
+    @Test
+    public void testDelete() {
+        doNothing().when(mortgageDAO).delete(anyInt(), anyDouble());
+
+        assertDoesNotThrow(() -> mortgageService.delete(123456, 1000));
+
+        verify(mortgageDAO, times(1)).delete(123456, 1000);
+    }
+
+    @Test
+    public void testMakePaymentValid() {
+        MortgagePayment payment = new MortgagePayment(1L, 200);
+        when(mortgageDAO.findById(payment.getId())).thenReturn(testMortgage);
+
+        assertDoesNotThrow(() -> mortgageService.makePayment(payment));
+
+        verify(mortgageDAO, times(1)).update(eq(1L), any(Mortgage.class));
+    }
+
+    @Test
+    public void testMakePaymentExceedsBalance() {
+        MortgagePayment payment = new MortgagePayment(1L, 600);
+        when(mortgageDAO.findById(payment.getId())).thenReturn(testMortgage);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> mortgageService.makePayment(payment));
+
+        assertEquals("Payment exceeds the remaining loan balance", exception.getMessage());
+        verify(mortgageDAO, never()).update(anyLong(), any(Mortgage.class));
+    }
+
+    @Test
+    public void testExistsByPassportNumber() {
+        when(mortgageDAO.existsByPassportNumber(123456)).thenReturn(true);
+
+        boolean exists = mortgageService.existsByPassportNumber(123456);
+
+        assertTrue(exists);
+        verify(mortgageDAO, times(1)).existsByPassportNumber(123456);
     }
 }

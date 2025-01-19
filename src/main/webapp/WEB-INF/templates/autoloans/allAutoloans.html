@@ -14,6 +14,7 @@
         <th>CurrentMortgageSumm</th>
         <th>mortgageMonthsTerm</th>
         <th>PassportNumber</th>
+        <th>Pay</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -25,6 +26,12 @@
         <td th:text="${autoloan.currentMortgageSumm}"></td>
         <td th:text="${autoloan.mortgageMonthsTerm}"></td>
         <td th:text="${autoloan.passportNumber}"></td>
+        <!-- Button to pay -->
+        <td>
+            <form th:action="@{/autoloans/{id}/payment(id=${autoloan.id})}" method="get">
+                <input type="submit" value="Pay"/>
+            </form>
+        </td>
         <!-- Button to edit -->
         <td>
             <form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/edit(
@@ -37,10 +44,8 @@
         <!-- Button to delete -->
         <td>
             <form th:action="@{/autoloans/{passportNumber}/{mortgageSumm}/delete(passportNumber=${autoloan.passportNumber},
-            mortgageSumm=${autoloan.mortgageSumm})}" method="post">
-                <input type="hidden" name="_method" value="delete"/>
-                <input type="submit" value="Delete"
-                       onclick="return confirm('Are you sure you want to delete this autoloan?');"/>
+                 mortgageSumm=${autoloan.mortgageSumm})}" method="get">
+                <input type="submit" value="Delete"/>
             </form>
         </td>
     </tr>
@@ -51,7 +56,7 @@
 <a href="/autoloans/new">Create a new autoloan</a>
 <br/>
 <!-- Button to get back to the main page -->
-<a href="/online-bank">To get back to the main page of website</a>
+<a href="/">To get back to the main page of website</a>
 <br>
 </body>
 </html>

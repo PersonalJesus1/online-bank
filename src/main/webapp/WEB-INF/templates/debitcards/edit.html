@@ -23,7 +23,11 @@
     </script>
 </head>
 <body>
-<form th:method="PATCH" th:action="@{/debitcards/{cardNumber}/edit(cardNumber=${debitcard.getCardNumber()})}" th:object="${debitcard}">
+    <form method="POST" th:action="@{/debitcards/{passportNumber}/{cardNumber}/edit(cardNumber=${debitcard.cardNumber},
+            passportNumber=${debitcard.passportNumber})}"
+          th:object="${debitcard}">
+        <input type="hidden" name="_method" value="PATCH"/>
+
     <!-- issueCardDate Field -->
     <label for="issueCardDate">Enter issueCardDate: </label>
     <input type="date" th:field="*{issueCardDate}" id="issueCardDate" oninput="updateExpirationDate()" />

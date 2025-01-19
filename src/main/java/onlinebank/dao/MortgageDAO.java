@@ -1,15 +1,14 @@
 package onlinebank.dao;
 
-import jakarta.transaction.Transactional;
 import onlinebank.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 @Repository
 public class MortgageDAO {
 
@@ -17,70 +16,80 @@ public class MortgageDAO {
     private SessionFactory sessionFactory;
 
     public List<Mortgage> getAllMortgages() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Mortgage", Mortgage.class).getResultList();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Mortgage", Mortgage.class).getResultList();
     }
 
     public Mortgage show(int passportNumber, double mortgageSumm) {
-        try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
-            Query<Mortgage> query = session.createQuery(hql, Mortgage.class);
-            query.setParameter("passportNumber", passportNumber);
-            query.setParameter("mortgageSumm", mortgageSumm);
-            return query.uniqueResultOptional().orElse(null);
-        }
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
+        return session.createQuery(hql, Mortgage.class)
+                .setParameter("passportNumber", passportNumber)
+                .setParameter("mortgageSumm", mortgageSumm)
+                .uniqueResultOptional().orElse(null);
     }
 
-    @Transactional
     public void save(Mortgage mortgage) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(mortgage);
-            transaction.commit();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        session.save(mortgage);
     }
 
-    @Transactional
     public void update(int passportNumber, double mortgageSumm, Mortgage updatedMortgage) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
-            Query<Mortgage> query = session.createQuery(hql, Mortgage.class);
-            query.setParameter("passportNumber", passportNumber);
-            query.setParameter("mortgageSumm", mortgageSumm);
-
-            Mortgage existingMortgage = query.uniqueResultOptional().orElse(null);
-
-            if (existingMortgage != null) {
-                existingMortgage.setMortgageSumm(updatedMortgage.getMortgageSumm());
-                existingMortgage.setMortgageTerm(updatedMortgage.getMortgageTerm());
-                session.update(existingMortgage);
-            }
-            transaction.commit();
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
+        Query<Mortgage> query = session.createQuery(hql, Mortgage.class);
+        query.setParameter("passportNumber", passportNumber);
+        query.setParameter("mortgageSumm", mortgageSumm);
+        Mortgage existingMortgage = query.uniqueResultOptional().orElse(null);
+        if (existingMortgage != null) {
+            existingMortgage.setMortgageSumm(updatedMortgage.getMortgageSumm());
+            existingMortgage.setCurrentMortgageSumm(updatedMortgage.getCurrentMortgageSumm());
+            existingMortgage.setMortgageTerm(updatedMortgage.getMortgageTerm());
+            session.update(existingMortgage);
         }
     }
 
-    @Transactional
     public void delete(int passportNumber, double mortgageSumm) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            // Поиск записи по номеру паспорта и сумме кредита
-            String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
-            Query<Mortgage> query = session.createQuery(hql, Mortgage.class);
-            query.setParameter("passportNumber", passportNumber);
-            query.setParameter("mortgageSumm", mortgageSumm);
-
-            Mortgage existingMortgage = query.uniqueResultOptional().orElse(null);
-
-            // Если запись найдена, удалить её
-            if (existingMortgage != null) {
-                session.delete(existingMortgage);
-            }
-
-            transaction.commit();
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM Mortgage m WHERE m.passportNumber = :passportNumber AND m.mortgageSumm = :mortgageSumm";
+        Query<Mortgage> query = session.createQuery(hql, Mortgage.class);
+        query.setParameter("passportNumber", passportNumber);
+        query.setParameter("mortgageSumm", mortgageSumm);
+        Mortgage existingMortgage = query.uniqueResultOptional().orElse(null);
+        if (existingMortgage != null) {
+            session.delete(existingMortgage);
         }
+    }
+
+    public Mortgage findById(long id) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM Mortgage m WHERE m.id = :id";
+        return session.createQuery(hql, Mortgage.class)
+                .setParameter("id", id)
+                .uniqueResult();
+    }
+
+    public void update(Long id, Mortgage mortgage) {
+        Session session = sessionFactory.getCurrentSession();
+        Mortgage existingMortgage = session.get(Mortgage.class, id);
+        if (existingMortgage != null) {
+            existingMortgage.setCurrentMortgageSumm(mortgage.getCurrentMortgageSumm());
+            session.merge(existingMortgage);
+        }
+    }
+
+    public void delete(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Mortgage mortgage = session.get(Mortgage.class, id);
+        if (mortgage != null) {
+            session.delete(mortgage);
+        }
+    }
+    public boolean existsByPassportNumber(int passportNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(*) > 0 FROM User u WHERE u.passportNumber = :passportNumber";
+        return session.createQuery(hql, Boolean.class)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
     }
 }

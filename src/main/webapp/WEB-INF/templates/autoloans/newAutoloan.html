@@ -35,12 +35,16 @@
     <br/>
     <!-- mortgageMonthsTerm Field -->
     <label for="mortgageMonthsTerm">Enter mortgageMonthsTerm: </label>
-    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm"/>
+    <input type="number" th:field="*{mortgageMonthsTerm}" id="mortgageMonthsTerm"  min="1" required/>
     <div style="color:red" th:if="${#fields.hasErrors('mortgageMonthsTerm')}" th:errors="*{mortgageMonthsTerm}">
         mortgageMonthsTerm Error
     </div>
     <br/>
     <input type="submit" value="Create!"/>
+
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
 </form>
 </body>
 </html>

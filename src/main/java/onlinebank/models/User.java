@@ -1,46 +1,57 @@
 package onlinebank.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "bankuser")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
+    @Size(max = 64, message = "Name cannot exceed 64 characters")
     private String name;
+
     @Column(name = "surname")
     private String surname;
+
     @Column(name = "dateofbirth")
     private LocalDate dateOfBirth;
+
     @Column(name = "sex")
     private String sex;
+
     @Column(name = "passportnumber")
     private int passportNumber;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    private ArrayList<Mortgage> mortgageList;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<Mortgage> mortgageList;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    private ArrayList<AutoLoan> autoLoanList;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<AutoLoan> autoLoanList;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    private ArrayList<AutoLoan> debitcardList;
-
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<DebitCard> debitcardList;
 
     public User() {
     }
 
-    public User(String name, String surname, LocalDate dateOfBirth, String sex, int passportNumber, ArrayList<Mortgage> mortgageList, ArrayList<AutoLoan> autoLoanList) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User(String name, String surname, LocalDate dateOfBirth, String sex, int passportNumber,
+                List<Mortgage> mortgageList, List<AutoLoan> autoLoanList, List<DebitCard> debitcardList) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -48,6 +59,7 @@ public class User {
         this.passportNumber = passportNumber;
         this.mortgageList = mortgageList;
         this.autoLoanList = autoLoanList;
+        this.debitcardList = debitcardList;
     }
 
     public String getName() {
@@ -90,27 +102,27 @@ public class User {
         this.passportNumber = passportNumber;
     }
 
-    public ArrayList<Mortgage> getMortgageList() {
+    public List<Mortgage> getMortgageList() {
         return mortgageList;
     }
 
-    public void setMortgageList(ArrayList<Mortgage> mortgageList) {
+    public void setMortgageList(List<Mortgage> mortgageList) {
         this.mortgageList = mortgageList;
     }
 
-    public ArrayList<AutoLoan> getAutoLoanList() {
+    public List<AutoLoan> getAutoLoanList() {
         return autoLoanList;
     }
 
-    public void setAutoLoanList(ArrayList<AutoLoan> autoLoanList) {
+    public void setAutoLoanList(List<AutoLoan> autoLoanList) {
         this.autoLoanList = autoLoanList;
     }
 
-    public ArrayList<AutoLoan> getDebitcardList() {
+    public List<DebitCard> getDebitcardList() {
         return debitcardList;
     }
 
-    public void setDebitcardList(ArrayList<AutoLoan> debitcardList) {
+    public void setDebitcardList(List<DebitCard> debitcardList) {
         this.debitcardList = debitcardList;
     }
 }

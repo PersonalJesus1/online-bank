@@ -1,14 +1,14 @@
 package onlinebank.dao;
 
-import jakarta.transaction.Transactional;
 import onlinebank.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 @Repository
 public class DebitCardDAO {
 
@@ -16,53 +16,69 @@ public class DebitCardDAO {
     private SessionFactory sessionFactory;
 
     public List<DebitCard> getAllDebitcards() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM DebitCard", DebitCard.class).getResultList();
-        }
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM DebitCard", DebitCard.class).getResultList();
     }
 
-    public DebitCard show(String cardNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(DebitCard.class, cardNumber);
-        }
+    public DebitCard show(String cardNumber, int passportNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM DebitCard d WHERE d.cardNumber = :cardNumber AND d.passportNumber = :passportNumber";
+        return session.createQuery(hql, DebitCard.class)
+                .setParameter("cardNumber", cardNumber)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
+    }
+    public boolean existsByPassportNumber(int passportNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(*) > 0 FROM User u WHERE u.passportNumber = :passportNumber";
+        return session.createQuery(hql, Boolean.class)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
     }
 
-    @Transactional
-    public void save(DebitCard debitCard) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(debitCard);
-            transaction.commit();
-        }
+    public  void save(DebitCard debitcard) {
+        Session session = sessionFactory.getCurrentSession();
+        session.save(debitcard);
     }
 
-    @Transactional
     public void update(String cardNumber, DebitCard updatedDebitCard) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            DebitCard existingDebitCard = session.get(DebitCard.class, cardNumber);
-
-            if (existingDebitCard != null) {
-                existingDebitCard.setCardNumber(updatedDebitCard.getCardNumber());
-                existingDebitCard.setCardExpirationDate(updatedDebitCard.getCardExpirationDate());
-                existingDebitCard.setCardBalance(updatedDebitCard.getCardBalance());
-                session.update(existingDebitCard);
-            }
-            transaction.commit();
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM DebitCard d WHERE d.cardNumber = :cardNumber";
+        Query<DebitCard> query = session.createQuery(hql, DebitCard.class);
+        query.setParameter("cardNumber", cardNumber);
+        DebitCard existingDebitCard = query.uniqueResultOptional().orElse(null);
+        if (existingDebitCard != null) {
+            existingDebitCard.setCardNumber(updatedDebitCard.getCardNumber());
+            existingDebitCard.setCardExpirationDate(updatedDebitCard.getCardExpirationDate());
+            existingDebitCard.setCardBalance(updatedDebitCard.getCardBalance());
+            session.update(existingDebitCard);
         }
     }
 
-    @Transactional
-    public void delete(String cardNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            DebitCard debitCard = session.get(DebitCard.class, cardNumber);
-
-            if (debitCard != null) {
-                session.delete(debitCard);
-            }
-            transaction.commit();
+    public void delete(String cardNumber, int passportNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM DebitCard d WHERE d.cardNumber = :cardNumber AND d.passportNumber = :passportNumber";
+        DebitCard debitcard = session.createQuery(hql, DebitCard.class)
+                .setParameter("cardNumber", cardNumber)
+                .setParameter("passportNumber", passportNumber)
+                .uniqueResult();
+        if (debitcard != null) {
+            session.delete(debitcard);
         }
+    }
+
+  public DebitCard findByCardNumber(String cardNumber) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM DebitCard d WHERE d.cardNumber = :cardNumber";
+        return session.createQuery(hql, DebitCard.class)
+                .setParameter("cardNumber", cardNumber)
+                .uniqueResult();
+    }
+    public boolean existsByCardNumber(String cardNumber) {
+        String hql = "SELECT COUNT(*) > 0 FROM DebitCard d WHERE d.cardNumber = :cardNumber";
+        return sessionFactory.getCurrentSession()
+                .createQuery(hql, Boolean.class)
+                .setParameter("cardNumber", cardNumber)
+                .uniqueResult();
     }
 }

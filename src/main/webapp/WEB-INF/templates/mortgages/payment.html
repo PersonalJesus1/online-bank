@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+</head>
+<body>
+<h2>Make a Payment</h2>
+
+<form th:action="@{/mortgages/{id}/payment(id=${mortgagePayment.id})}"
+      th:object="${mortgagePayment}" method="post">
+    <input type="hidden" name="_method" value="patch"/>
+
+    <label for="amount">Amount:</label>
+    <input type="number" th:field="*{amount}" id="amount" step="0.01" required/>
+    <br/>
+
+    <input type="submit" value="Submit Payment"/>
+</form>
+
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+
+<a href="/mortgages">Back to Mortgages</a>
+</body>
+</html>

@@ -2,13 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Update account</title>
+    <title>Update user</title>
 </head>
+
 <body>
-<form th:method="PATCH" th:action="@{/users/{passportNumber}/edit(passportNumber=${user.getPassportNumber()})}" th:object="${user}">
+<form method="POST" th:action="@{/users/{passportNumber}/edit(passportNumber=${user.passportNumber})}"
+      th:object="${user}">
+        <input type="hidden" name="_method" value="PATCH"/>
     <!-- Name Field -->
     <label for="name">Enter name: </label>
     <input type="text" th:field="*{name}" id="name" />
+    <div th:if="${#fields.hasErrors('name')}" style="color: red;">
+        <p th:errors="*{name}"></p>
+    </div>
     <br/>
     <!-- Surname Field -->
     <label for="surname">Enter surname: </label>
